@@ -4,6 +4,9 @@ import { useToast } from '@/hooks/use-toast';
 import HeroSection from '@/components/sections/HeroSection';
 import PortfolioSection from '@/components/sections/PortfolioSection';
 import BookingModal from '@/components/sections/BookingModal';
+import GalleryModal from '@/components/sections/GalleryModal';
+import CalendarModal from '@/components/sections/CalendarModal';
+import Icon from '@/components/ui/icon';
 
 interface TimeSlot {
   id: number;
@@ -14,6 +17,8 @@ interface TimeSlot {
 
 const Index = () => {
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
+  const [galleryModalOpen, setGalleryModalOpen] = useState(false);
+  const [calendarModalOpen, setCalendarModalOpen] = useState(false);
   const [slots, setSlots] = useState<TimeSlot[]>([]);
   const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
@@ -219,12 +224,30 @@ const Index = () => {
             <h1 className="text-2xl font-semibold tracking-tight">
               YOLO NAIILS
             </h1>
-            <Button 
-              onClick={() => setBookingModalOpen(true)}
-              className="bg-black hover:bg-gray-800 text-white rounded-full px-6"
-            >
-              Записаться
-            </Button>
+            <div className="flex items-center gap-3">
+              <Button 
+                onClick={() => setGalleryModalOpen(true)}
+                variant="ghost"
+                className="text-gray-700 hover:bg-gray-100 rounded-full px-4"
+              >
+                <Icon name="Image" size={18} className="mr-2" />
+                Работы
+              </Button>
+              <Button 
+                onClick={() => setCalendarModalOpen(true)}
+                variant="ghost"
+                className="text-gray-700 hover:bg-gray-100 rounded-full px-4"
+              >
+                <Icon name="Calendar" size={18} className="mr-2" />
+                Календарь
+              </Button>
+              <Button 
+                onClick={() => setBookingModalOpen(true)}
+                className="bg-black hover:bg-gray-800 text-white rounded-full px-6"
+              >
+                Записаться
+              </Button>
+            </div>
           </div>
         </div>
       </nav>
@@ -235,6 +258,18 @@ const Index = () => {
       />
 
       <PortfolioSection portfolio={portfolio} />
+
+      <GalleryModal
+        open={galleryModalOpen}
+        onOpenChange={setGalleryModalOpen}
+        portfolio={portfolio}
+      />
+
+      <CalendarModal
+        open={calendarModalOpen}
+        onOpenChange={setCalendarModalOpen}
+        groupedSlots={groupedSlots}
+      />
 
       <BookingModal
         open={bookingModalOpen}

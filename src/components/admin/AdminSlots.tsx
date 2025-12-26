@@ -62,10 +62,15 @@ const AdminSlots = () => {
     const day = String(selectedDate.getDate()).padStart(2, '0');
     const dateStr = `${year}-${month}-${day}`;
 
+    const token = localStorage.getItem('admin_token');
+    
     try {
       const response = await fetch('https://functions.poehali.dev/9689b825-c9ac-49db-b85b-f1310460470d', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'X-Admin-Token': token || ''
+        },
         body: JSON.stringify({
           date: dateStr,
           time: newSlotTime
@@ -93,10 +98,15 @@ const AdminSlots = () => {
   };
 
   const handleDeleteSlot = async (slotId: number) => {
+    const token = localStorage.getItem('admin_token');
+    
     try {
       const response = await fetch('https://functions.poehali.dev/9689b825-c9ac-49db-b85b-f1310460470d', {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'X-Admin-Token': token || ''
+        },
         body: JSON.stringify({ slot_id: slotId })
       });
 
@@ -159,10 +169,15 @@ const AdminSlots = () => {
     const day = String(selectedDate.getDate()).padStart(2, '0');
     const dateStr = `${year}-${month}-${day}`;
 
+    const token = localStorage.getItem('admin_token');
+    
     try {
       const response = await fetch('https://functions.poehali.dev/9689b825-c9ac-49db-b85b-f1310460470d', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'X-Admin-Token': token || ''
+        },
         body: JSON.stringify({
           date: dateStr,
           time: time

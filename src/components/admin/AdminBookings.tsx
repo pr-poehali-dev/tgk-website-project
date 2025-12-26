@@ -36,8 +36,14 @@ const AdminBookings = () => {
   }, []);
 
   const fetchBookings = async () => {
+    const token = localStorage.getItem('admin_token');
+    
     try {
-      const response = await fetch('https://functions.poehali.dev/406a4a18-71da-46ec-a8a4-efc9c7c87810');
+      const response = await fetch('https://functions.poehali.dev/406a4a18-71da-46ec-a8a4-efc9c7c87810', {
+        headers: {
+          'X-Admin-Token': token || ''
+        }
+      });
       const data = await response.json();
       setBookings(data);
     } catch (error) {
@@ -70,9 +76,14 @@ const AdminBookings = () => {
       return;
     }
 
+    const token = localStorage.getItem('admin_token');
+    
     try {
       const response = await fetch(`https://functions.poehali.dev/406a4a18-71da-46ec-a8a4-efc9c7c87810?id=${bookingId}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+          'X-Admin-Token': token || ''
+        }
       });
 
       if (response.ok) {

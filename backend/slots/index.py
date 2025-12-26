@@ -2,6 +2,7 @@ import json
 import os
 import psycopg2
 from datetime import datetime, date
+from utils import verify_admin_token
 
 def handler(event: dict, context) -> dict:
     """API для управления слотами времени записи"""
@@ -13,7 +14,7 @@ def handler(event: dict, context) -> dict:
             'headers': {
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-                'Access-Control-Allow-Headers': 'Content-Type'
+                'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Token'
             },
             'body': '',
             'isBase64Encoded': False
@@ -50,6 +51,18 @@ def handler(event: dict, context) -> dict:
             }
         
         elif method == 'POST':
+            token = event.get('headers', {}).get('x-admin-token') or event.get('headers', {}).get('X-Admin-Token')
+            if not verify_admin_token(token):
+                return {
+                    'statusCode': 401,
+                    'headers': {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    'body': json.dumps({'error': 'Неавторизован'}),
+                    'isBase64Encoded': False
+                }
+            
             data = json.loads(event.get('body', '{}'))
             slot_date = data.get('date')
             slot_time = data.get('time')
@@ -86,6 +99,18 @@ def handler(event: dict, context) -> dict:
                 }
         
         elif method == 'PUT':
+            token = event.get('headers', {}).get('x-admin-token') or event.get('headers', {}).get('X-Admin-Token')
+            if not verify_admin_token(token):
+                return {
+                    'statusCode': 401,
+                    'headers': {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    'body': json.dumps({'error': 'Неавторизован'}),
+                    'isBase64Encoded': False
+                }
+            
             data = json.loads(event.get('body', '{}'))
             slot_id = data.get('id')
             is_available = data.get('available')
@@ -109,6 +134,18 @@ def handler(event: dict, context) -> dict:
             }
         
         elif method == 'DELETE':
+            token = event.get('headers', {}).get('x-admin-token') or event.get('headers', {}).get('X-Admin-Token')
+            if not verify_admin_token(token):
+                return {
+                    'statusCode': 401,
+                    'headers': {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    'body': json.dumps({'error': 'Неавторизован'}),
+                    'isBase64Encoded': False
+                }
+            
             data = json.loads(event.get('body', '{}'))
             slot_id = data.get('slot_id')
             

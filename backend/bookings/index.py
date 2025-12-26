@@ -4,6 +4,7 @@ import psycopg2
 import base64
 import boto3
 from datetime import datetime
+from utils import verify_admin_token
 
 def handler(event: dict, context) -> dict:
     """API для создания заявок на запись с загрузкой фото"""
@@ -15,7 +16,7 @@ def handler(event: dict, context) -> dict:
             'headers': {
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
-                'Access-Control-Allow-Headers': 'Content-Type'
+                'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Token'
             },
             'body': '',
             'isBase64Encoded': False
@@ -107,6 +108,18 @@ def handler(event: dict, context) -> dict:
             }
         
         elif method == 'GET':
+            token = event.get('headers', {}).get('x-admin-token') or event.get('headers', {}).get('X-Admin-Token')
+            if not verify_admin_token(token):
+                return {
+                    'statusCode': 401,
+                    'headers': {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    'body': json.dumps({'error': 'Неавторизован'}),
+                    'isBase64Encoded': False
+                }
+            
             cur.execute("""
                 SELECT b.id, b.client_name, b.client_contact, 
                        b.booking_type, b.comment, b.payment_status,
@@ -155,6 +168,18 @@ def handler(event: dict, context) -> dict:
             }
         
         elif method == 'DELETE':
+            token = event.get('headers', {}).get('x-admin-token') or event.get('headers', {}).get('X-Admin-Token')
+            if not verify_admin_token(token):
+                return {
+                    'statusCode': 401,
+                    'headers': {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    'body': json.dumps({'error': 'Неавторизован'}),
+                    'isBase64Encoded': False
+                }
+            
             params = event.get('queryStringParameters', {})
             booking_id = params.get('id')
             

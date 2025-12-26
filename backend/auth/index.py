@@ -25,17 +25,53 @@ def handler(event: dict, context) -> dict:
         data = json.loads(event.get('body', '{}'))
         password = data.get('password', '')
         
-        password_hash = hashlib.sha256(password.encode()).hexdigest()
+        conn = psycopg2.connect(os.environ['DATABASE_URL'])
+        cur = conn.cursor()
         
-        correct_hash = hashlib.sha256('yolo2024'.encode()).hexdigest()
-        
-        if password_hash == correct_hash:
-            token = secrets.token_urlsafe(32)
+        try:
+            source_ip = event.get('requestContext', {}).get('identity', {}).get('sourceIp', 'unknown')
             
-            conn = psycopg2.connect(os.environ['DATABASE_URL'])
-            cur = conn.cursor()
+            cur.execute("""
+                CREATE TABLE IF NOT EXISTS rate_limit (
+                    ip VARCHAR(45) PRIMARY KEY,
+                    auth_attempts INT DEFAULT 0,
+                    last_attempt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            """)
             
-            try:
+            cur.execute("""
+                SELECT auth_attempts, last_attempt 
+                FROM rate_limit 
+                WHERE ip = %s
+            """, (source_ip,))
+            
+            result = cur.fetchone()
+            
+            if result:
+                attempts, last_attempt = result
+                time_diff = (datetime.now() - last_attempt).total_seconds()
+                
+                if time_diff < 3600 and attempts >= 10:
+                    return {
+                        'statusCode': 429,
+                        'headers': {
+                            'Content-Type': 'application/json',
+                            'Access-Control-Allow-Origin': '*'
+                        },
+                        'body': json.dumps({'error': 'Слишком много попыток. Попробуйте через час'}),
+                        'isBase64Encoded': False
+                    }
+                
+                if time_diff >= 3600:
+                    attempts = 0
+            else:
+                attempts = 0
+            
+            password_hash = hashlib.sha256(password.encode()).hexdigest()
+            correct_hash = hashlib.sha256('yolo2024'.encode()).hexdigest()
+            
+            if password_hash == correct_hash:
+                token = secrets.token_urlsafe(32)
                 expires_at = datetime.now() + timedelta(days=7)
                 
                 cur.execute("""
@@ -52,6 +88,12 @@ def handler(event: dict, context) -> dict:
                     VALUES (%s, %s)
                 """, (token, expires_at))
                 
+                cur.execute("""
+                    INSERT INTO rate_limit (ip, auth_attempts, last_attempt)
+                    VALUES (%s, 0, CURRENT_TIMESTAMP)
+                    ON CONFLICT (ip) DO UPDATE SET auth_attempts = 0, last_attempt = CURRENT_TIMESTAMP
+                """, (source_ip,))
+                
                 conn.commit()
                 
                 return {
@@ -66,33 +108,43 @@ def handler(event: dict, context) -> dict:
                     }),
                     'isBase64Encoded': False
                 }
-            except Exception as e:
-                conn.rollback()
+            else:
+                cur.execute("""
+                    INSERT INTO rate_limit (ip, auth_attempts, last_attempt)
+                    VALUES (%s, 1, CURRENT_TIMESTAMP)
+                    ON CONFLICT (ip) DO UPDATE SET 
+                        auth_attempts = rate_limit.auth_attempts + 1,
+                        last_attempt = CURRENT_TIMESTAMP
+                """, (source_ip,))
+                
+                conn.commit()
+                
                 return {
-                    'statusCode': 500,
+                    'statusCode': 401,
                     'headers': {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': '*'
                     },
-                    'body': json.dumps({'error': str(e)}),
+                    'body': json.dumps({
+                        'success': False,
+                        'error': 'Неверный пароль'
+                    }),
                     'isBase64Encoded': False
                 }
-            finally:
-                cur.close()
-                conn.close()
-        else:
+        except Exception as e:
+            conn.rollback()
             return {
-                'statusCode': 401,
+                'statusCode': 500,
                 'headers': {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*'
                 },
-                'body': json.dumps({
-                    'success': False,
-                    'error': 'Неверный пароль'
-                }),
+                'body': json.dumps({'error': str(e)}),
                 'isBase64Encoded': False
             }
+        finally:
+            cur.close()
+            conn.close()
     
     return {
         'statusCode': 405,

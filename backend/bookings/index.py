@@ -36,6 +36,62 @@ def handler(event: dict, context) -> dict:
             comment = data.get('comment', '')
             photos_base64 = data.get('photos', [])
             
+            source_ip = event.get('requestContext', {}).get('identity', {}).get('sourceIp', 'unknown')
+            
+            cur.execute("""
+                CREATE TABLE IF NOT EXISTS booking_rate_limit (
+                    ip VARCHAR(45) PRIMARY KEY,
+                    booking_count INT DEFAULT 0,
+                    last_booking TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            """)
+            
+            cur.execute("""
+                SELECT booking_count, last_booking 
+                FROM booking_rate_limit 
+                WHERE ip = %s
+            """, (source_ip,))
+            
+            result = cur.fetchone()
+            
+            if result:
+                count, last_booking = result
+                time_diff = (datetime.now() - last_booking).total_seconds()
+                
+                if time_diff < 86400 and count >= 5:
+                    return {
+                        'statusCode': 429,
+                        'headers': {
+                            'Content-Type': 'application/json',
+                            'Access-Control-Allow-Origin': '*'
+                        },
+                        'body': json.dumps({'error': 'Превышен лимит заявок (5 в сутки). Попробуйте завтра'}),
+                        'isBase64Encoded': False
+                    }
+                
+                if time_diff >= 86400:
+                    count = 0
+            else:
+                count = 0
+            
+            MAX_PHOTO_SIZE = 5 * 1024 * 1024
+            for idx, photo_data in enumerate(photos_base64):
+                if photo_data.startswith('data:image'):
+                    photo_data = photo_data.split(',')[1]
+                
+                photo_bytes = base64.b64decode(photo_data)
+                
+                if len(photo_bytes) > MAX_PHOTO_SIZE:
+                    return {
+                        'statusCode': 413,
+                        'headers': {
+                            'Content-Type': 'application/json',
+                            'Access-Control-Allow-Origin': '*'
+                        },
+                        'body': json.dumps({'error': f'Фото {idx + 1} слишком большое (максимум 5MB)'}),
+                        'isBase64Encoded': False
+                    }
+            
             cur.execute("""
                 UPDATE time_slots 
                 SET is_available = false 
@@ -67,6 +123,14 @@ def handler(event: dict, context) -> dict:
                 aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
                 aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY']
             )
+            
+            cur.execute("""
+                INSERT INTO booking_rate_limit (ip, booking_count, last_booking)
+                VALUES (%s, 1, CURRENT_TIMESTAMP)
+                ON CONFLICT (ip) DO UPDATE SET 
+                    booking_count = booking_rate_limit.booking_count + 1,
+                    last_booking = CURRENT_TIMESTAMP
+            """, (source_ip,))
             
             photo_urls = []
             for idx, photo_data in enumerate(photos_base64):

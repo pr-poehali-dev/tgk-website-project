@@ -82,7 +82,11 @@ const Admin = () => {
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Icon name="Settings" size={24} />
+              <img 
+                src="https://cdn.poehali.dev/files/Screenshot_27.png" 
+                alt="Admin" 
+                className="w-10 h-10 rounded-full object-cover border-2 border-primary"
+              />
               <h1 className="text-2xl font-semibold">Админ-панель</h1>
             </div>
             <Button onClick={handleLogout} variant="outline">

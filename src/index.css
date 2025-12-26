@@ -111,3 +111,87 @@
     font-family: "Montserrat", sans-serif;
   }
 }
+
+.calendar-wrapper .react-calendar {
+  width: 100%;
+  border: none;
+  border-radius: 1rem;
+  background: hsl(var(--card));
+  padding: 1rem;
+  font-family: "Open Sans", sans-serif;
+}
+
+.calendar-wrapper .react-calendar__navigation {
+  margin-bottom: 1rem;
+}
+
+.calendar-wrapper .react-calendar__navigation button {
+  color: hsl(var(--foreground));
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.calendar-wrapper .react-calendar__navigation button:hover {
+  background: hsl(var(--muted));
+}
+
+.calendar-wrapper .react-calendar__month-view__weekdays {
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: hsl(var(--muted-foreground));
+  margin-bottom: 0.5rem;
+}
+
+.calendar-wrapper .react-calendar__tile {
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  color: hsl(var(--foreground));
+  background: transparent;
+}
+
+.calendar-wrapper .react-calendar__tile:hover {
+  background: hsl(var(--muted));
+}
+
+.calendar-wrapper .react-calendar__tile--now {
+  background: hsl(var(--accent));
+  font-weight: 600;
+}
+
+.calendar-wrapper .react-calendar__tile--active {
+  background: hsl(var(--primary)) !important;
+  color: hsl(var(--primary-foreground)) !important;
+  font-weight: 600;
+}
+
+.calendar-wrapper .react-calendar__tile.available-date {
+  background: hsl(var(--muted));
+  font-weight: 600;
+  position: relative;
+}
+
+.calendar-wrapper .react-calendar__tile.available-date::after {
+  content: "";
+  position: absolute;
+  bottom: 0.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: hsl(var(--primary));
+}
+
+.calendar-wrapper .react-calendar__tile:disabled {
+  background: transparent;
+  color: hsl(var(--muted-foreground));
+  opacity: 0.3;
+}
+
+.calendar-wrapper .react-calendar__tile--active.available-date::after {
+  background: hsl(var(--primary-foreground));
+}

@@ -13,27 +13,27 @@ interface PortfolioSectionProps {
 const PortfolioSection = ({ portfolio }: PortfolioSectionProps) => {
   return (
     <>
-      <section id="portfolio" className="py-20 px-4">
+      <section id="portfolio" className="py-24 px-6">
         <div className="container mx-auto max-w-6xl">
-          <h2 className="text-5xl font-bold text-center mb-12 bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+          <h2 className="text-5xl md:text-6xl font-semibold text-center mb-16 tracking-tight">
             Галерея работ
           </h2>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-8">
             {portfolio.map((item, idx) => (
               <Card 
                 key={idx} 
-                className="overflow-hidden group cursor-pointer bg-white/60 backdrop-blur-sm border-white/40 hover:shadow-2xl transition-all animate-scale-in"
+                className="overflow-hidden group cursor-pointer bg-white border-gray-100 hover:shadow-xl transition-all duration-500 animate-scale-in"
                 style={{ animationDelay: `${idx * 0.1}s` }}
               >
                 <div className="aspect-square overflow-hidden">
                   <img 
                     src={item.image}
                     alt={item.title}
-                    className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                 </div>
-                <CardContent className="p-4">
-                  <h3 className="font-semibold text-center">{item.title}</h3>
+                <CardContent className="p-6">
+                  <h3 className="font-medium text-center text-gray-700">{item.title}</h3>
                 </CardContent>
               </Card>
             ))}
@@ -41,33 +41,33 @@ const PortfolioSection = ({ portfolio }: PortfolioSectionProps) => {
         </div>
       </section>
 
-      <section className="py-20 px-4 bg-white/40 backdrop-blur-sm">
+      <section className="py-24 px-6 bg-gray-50">
         <div className="container mx-auto max-w-6xl">
-          <h2 className="text-5xl font-bold text-center mb-12 bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+          <h2 className="text-5xl md:text-6xl font-semibold text-center mb-16 tracking-tight">
             Почему я?
           </h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card className="text-center p-8 bg-white/60 backdrop-blur-sm border-white/40 animate-fade-in">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-pink-200 to-purple-200 flex items-center justify-center mx-auto mb-4">
-                <Icon name="Sparkles" size={32} className="text-purple-600" />
+          <div className="grid md:grid-cols-3 gap-12">
+            <div className="text-center animate-fade-in">
+              <div className="w-20 h-20 rounded-full bg-gray-900 flex items-center justify-center mx-auto mb-6">
+                <Icon name="Sparkles" size={32} className="text-white" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Честные цены</h3>
-              <p className="text-gray-600">Никаких скрытых доплат</p>
-            </Card>
-            <Card className="text-center p-8 bg-white/60 backdrop-blur-sm border-white/40 animate-fade-in" style={{ animationDelay: '0.1s' }}>
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-pink-200 to-purple-200 flex items-center justify-center mx-auto mb-4">
-                <Icon name="Palette" size={32} className="text-purple-600" />
+              <h3 className="text-xl font-medium mb-3">Честные цены</h3>
+              <p className="text-gray-600 font-light">Никаких скрытых доплат</p>
+            </div>
+            <div className="text-center animate-fade-in" style={{ animationDelay: '0.1s' }}>
+              <div className="w-20 h-20 rounded-full bg-gray-900 flex items-center justify-center mx-auto mb-6">
+                <Icon name="Palette" size={32} className="text-white" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Стильный дизайн</h3>
-              <p className="text-gray-600">Индивидуальный подход</p>
-            </Card>
-            <Card className="text-center p-8 bg-white/60 backdrop-blur-sm border-white/40 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-pink-200 to-purple-200 flex items-center justify-center mx-auto mb-4">
-                <Icon name="ShieldCheck" size={32} className="text-purple-600" />
+              <h3 className="text-xl font-medium mb-3">Стильный дизайн</h3>
+              <p className="text-gray-600 font-light">Индивидуальный подход</p>
+            </div>
+            <div className="text-center animate-fade-in" style={{ animationDelay: '0.2s' }}>
+              <div className="w-20 h-20 rounded-full bg-gray-900 flex items-center justify-center mx-auto mb-6">
+                <Icon name="ShieldCheck" size={32} className="text-white" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Предоплата 300₽</h3>
-              <p className="text-gray-600">Гарантия записи</p>
-            </Card>
+              <h3 className="text-xl font-medium mb-3">Предоплата 300₽</h3>
+              <p className="text-gray-600 font-light">Гарантия записи</p>
+            </div>
           </div>
         </div>
       </section>

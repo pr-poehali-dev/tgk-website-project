@@ -3,8 +3,7 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import HeroSection from '@/components/sections/HeroSection';
 import PortfolioSection from '@/components/sections/PortfolioSection';
-import SlotsSection from '@/components/sections/SlotsSection';
-import BookingSection from '@/components/sections/BookingSection';
+import BookingModal from '@/components/sections/BookingModal';
 
 interface TimeSlot {
   id: number;
@@ -14,7 +13,7 @@ interface TimeSlot {
 }
 
 const Index = () => {
-  const [activeSection, setActiveSection] = useState('home');
+  const [bookingModalOpen, setBookingModalOpen] = useState(false);
   const [slots, setSlots] = useState<TimeSlot[]>([]);
   const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
@@ -64,7 +63,6 @@ const Index = () => {
   };
 
   const scrollToSection = (sectionId: string) => {
-    setActiveSection(sectionId);
     const element = document.getElementById(sectionId);
     element?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -130,7 +128,6 @@ const Index = () => {
       if (response.ok) {
         setBookingId(data.booking_id);
         setShowPayment(true);
-        scrollToSection('payment');
         toast({
           title: 'Отлично!',
           description: 'Заявка создана, теперь внесите предоплату'
@@ -184,7 +181,7 @@ const Index = () => {
         setReceiptImage('');
         setBookingId(null);
         setShowPayment(false);
-        scrollToSection('home');
+        setBookingModalOpen(false);
       } else {
         toast({
           title: 'Ошибка',
@@ -215,17 +212,16 @@ const Index = () => {
   const groupedSlots = groupSlotsByDate(slots);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
-      <nav className="fixed top-0 w-full bg-white/70 backdrop-blur-xl z-50 border-b border-white/20 shadow-sm">
-        <div className="container mx-auto px-4 py-4">
+    <div className="min-h-screen bg-white">
+      <nav className="fixed top-0 w-full bg-white/80 backdrop-blur-xl z-50 border-b border-gray-100">
+        <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">
+            <h1 className="text-2xl font-semibold tracking-tight">
               YOLO NAIILS
             </h1>
             <Button 
-              size="sm" 
-              onClick={() => scrollToSection('booking')}
-              className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700"
+              onClick={() => setBookingModalOpen(true)}
+              className="bg-black hover:bg-gray-800 text-white rounded-full px-6"
             >
               Записаться
             </Button>
@@ -234,35 +230,32 @@ const Index = () => {
       </nav>
 
       <HeroSection 
-        onScrollToBooking={() => scrollToSection('booking')}
+        onScrollToBooking={() => setBookingModalOpen(true)}
         onScrollToPortfolio={() => scrollToSection('portfolio')}
       />
 
       <PortfolioSection portfolio={portfolio} />
 
-      <SlotsSection 
+      <BookingModal
+        open={bookingModalOpen}
+        onOpenChange={setBookingModalOpen}
         groupedSlots={groupedSlots}
         selectedSlot={selectedSlot}
         onSelectSlot={setSelectedSlot}
-        onScrollToBooking={() => scrollToSection('booking')}
-      />
-
-      <BookingSection 
-        selectedSlot={selectedSlot}
         formData={formData}
+        onFormChange={setFormData}
         selectedImages={selectedImages}
+        onImageUpload={handleImageUpload}
         showPayment={showPayment}
         receiptImage={receiptImage}
-        onFormChange={setFormData}
-        onImageUpload={handleImageUpload}
         onReceiptUpload={handleReceiptUpload}
         onSubmitBooking={handleSubmitBooking}
         onSubmitPayment={handleSubmitPayment}
       />
 
-      <footer className="py-8 px-4 bg-white/60 backdrop-blur-sm border-t border-white/20">
+      <footer className="py-12 px-6 bg-gray-50 border-t border-gray-100">
         <div className="container mx-auto max-w-6xl text-center">
-          <p className="text-gray-600">© 2024 YOLO NAIILS. Все права защищены.</p>
+          <p className="text-gray-500 text-sm">© 2024 YOLO NAIILS. Все права защищены.</p>
         </div>
       </footer>
     </div>

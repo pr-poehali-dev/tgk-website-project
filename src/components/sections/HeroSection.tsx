@@ -8,22 +8,22 @@ interface HeroSectionProps {
 
 const HeroSection = ({ onScrollToBooking, onScrollToPortfolio }: HeroSectionProps) => {
   return (
-    <section id="home" className="pt-32 pb-20 px-4">
-      <div className="container mx-auto max-w-6xl text-center">
-        <Badge variant="secondary" className="mb-6 bg-white/60 backdrop-blur-sm">
-          💅 Мастер маникюра
+    <section id="home" className="pt-32 pb-24 px-6">
+      <div className="container mx-auto max-w-5xl text-center">
+        <Badge variant="secondary" className="mb-8 bg-gray-100 text-gray-700 border-0 text-sm">
+          💅 Профессиональный маникюр
         </Badge>
-        <h2 className="text-6xl md:text-7xl font-bold leading-tight mb-6 bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 bg-clip-text text-transparent animate-fade-in">
+        <h2 className="text-6xl md:text-8xl font-semibold leading-[1.1] mb-6 tracking-tight animate-fade-in">
           Ваши ногти —<br />наше искусство
         </h2>
-        <p className="text-xl text-gray-700 mb-8 max-w-2xl mx-auto animate-fade-in">
+        <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-2xl mx-auto animate-fade-in font-light">
           Создаём уникальные дизайны и обеспечиваем идеальный уход
         </p>
         <div className="flex gap-4 justify-center animate-slide-up">
           <Button 
             size="lg" 
             onClick={onScrollToBooking}
-            className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-lg px-8"
+            className="bg-black hover:bg-gray-800 text-white text-base px-8 h-12 rounded-full"
           >
             Записаться онлайн
           </Button>
@@ -31,9 +31,9 @@ const HeroSection = ({ onScrollToBooking, onScrollToPortfolio }: HeroSectionProp
             size="lg" 
             variant="outline" 
             onClick={onScrollToPortfolio}
-            className="text-lg px-8 border-2"
+            className="text-base px-8 h-12 rounded-full border-gray-300 hover:bg-gray-50"
           >
-            Работы
+            Смотреть работы
           </Button>
         </div>
       </div>

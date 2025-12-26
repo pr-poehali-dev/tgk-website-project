@@ -365,7 +365,7 @@ const Index = () => {
               <h3 className="text-lg font-medium mb-4">Адрес студии</h3>
               <p className="text-muted-foreground mb-2">г. Томск, ул. Алтайская 10</p>
               <a 
-                href="https://2gis.ru/tomsk/geo/70000001080711309" 
+                href="https://2gis.ru/tomsk/geo/422848120236160?m=84.97393%2C56.480667%2F14.76" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-primary hover:underline text-sm"
@@ -375,7 +375,7 @@ const Index = () => {
             </div>
             <div className="rounded-xl overflow-hidden border border-border h-[200px]">
               <iframe 
-                src="https://widgets.2gis.com/widget?type=firmsonmap&options=%7B%22pos%22%3A%7B%22lat%22%3A56.49163227758898%2C%22lon%22%3A84.95277881622316%2C%22zoom%22%3A16%7D%2C%22opt%22%3A%7B%22city%22%3A%22tomsk%22%7D%2C%22org%22%3A%2270000001080711309%22%7D" 
+                src="https://widgets.2gis.com/widget?type=firmsonmap&options=%7B%22pos%22%3A%7B%22lat%22%3A56.480667%2C%22lon%22%3A84.97393%2C%22zoom%22%3A16%7D%2C%22opt%22%3A%7B%22city%22%3A%22tomsk%22%7D%2C%22org%22%3A%22422848120236160%22%7D" 
                 width="100%" 
                 height="100%" 
                 style={{ border: 'none' }}

@@ -254,7 +254,7 @@ const Index = () => {
       
     } catch (error) {
       toast({
-        title: '✅ Заявка сохранена!',
+        title: '✅ Запись сохранена!',
         description: 'Мастер получит уведомление о вашей записи',
         duration: 5000
       });
@@ -359,8 +359,32 @@ const Index = () => {
       />
 
       <footer className="py-12 px-6 bg-muted border-t border-border">
-        <div className="container mx-auto max-w-6xl text-center">
-          <p className="text-muted-foreground text-sm">© 2024 YOLO NAIILS. Все права защищены.</p>
+        <div className="container mx-auto max-w-6xl">
+          <div className="grid md:grid-cols-2 gap-8 mb-8">
+            <div>
+              <h3 className="text-lg font-medium mb-4">Адрес студии</h3>
+              <p className="text-muted-foreground mb-2">г. Томск, ул. Алтайская 10</p>
+              <a 
+                href="https://2gis.ru/tomsk/geo/70000001080711309" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-primary hover:underline text-sm"
+              >
+                Открыть в 2ГИС
+              </a>
+            </div>
+            <div className="rounded-xl overflow-hidden border border-border h-[200px]">
+              <iframe 
+                src="https://widgets.2gis.com/widget?type=firmsonmap&options=%7B%22pos%22%3A%7B%22lat%22%3A56.49163227758898%2C%22lon%22%3A84.95277881622316%2C%22zoom%22%3A16%7D%2C%22opt%22%3A%7B%22city%22%3A%22tomsk%22%7D%2C%22org%22%3A%2270000001080711309%22%7D" 
+                width="100%" 
+                height="100%" 
+                style={{ border: 'none' }}
+              />
+            </div>
+          </div>
+          <div className="text-center pt-6 border-t border-border">
+            <p className="text-muted-foreground text-sm">© 2024 YOLO NAIILS. Все права защищены.</p>
+          </div>
         </div>
       </footer>
     </div>

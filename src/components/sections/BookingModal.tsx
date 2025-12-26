@@ -237,7 +237,7 @@ const BookingModal = ({
                 <div className="bg-muted p-6 rounded-2xl space-y-2">
                   <p className="font-medium mb-3">Реквизиты для перевода</p>
                   <p className="text-sm">Ozon Банк: <span className="font-mono">2204 3204 3449 4284</span></p>
-                  <p className="text-xs text-muted-foreground mt-3">Получатель: Иванова Анна Сергеевна</p>
+                  <p className="text-xs text-muted-foreground mt-3">Получатель: Арина Ш.</p>
                 </div>
 
                 <div>

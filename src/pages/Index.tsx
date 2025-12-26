@@ -36,16 +36,24 @@ const Index = () => {
 
   const portfolio = [
     {
-      image: 'https://cdn.poehali.dev/projects/c846c6bc-a002-4737-a261-823e13b16e94/files/c013c942-87f0-431d-a910-2f2b65965aac.jpg',
-      title: 'Нежный дизайн'
+      image: 'https://cdn.poehali.dev/files/photo_2025-12-27_00-41-42 (2).jpg',
+      title: 'Серебряное сияние'
     },
     {
-      image: 'https://cdn.poehali.dev/projects/c846c6bc-a002-4737-a261-823e13b16e94/files/dd33ae66-c63d-4124-bdfa-b7be554c2c5d.jpg',
-      title: 'Геометрия'
+      image: 'https://cdn.poehali.dev/files/photo_2025-12-27_00-41-42.jpg',
+      title: 'Красный акцент'
     },
     {
-      image: 'https://cdn.poehali.dev/projects/c846c6bc-a002-4737-a261-823e13b16e94/files/28288c7d-4245-4cda-8882-ef51103d960a.jpg',
-      title: 'Французский стиль'
+      image: 'https://cdn.poehali.dev/files/photo_2025-12-27_00-41-43.jpg',
+      title: 'Нежный беж с декором'
+    },
+    {
+      image: 'https://cdn.poehali.dev/files/photo_2025-12-27_00-41-44 (2).jpg',
+      title: 'Молочный с блестками'
+    },
+    {
+      image: 'https://cdn.poehali.dev/files/photo_2025-12-27_00-41-44.jpg',
+      title: 'Праздничный градиент'
     },
     {
       image: 'https://cdn.poehali.dev/projects/c846c6bc-a002-4737-a261-823e13b16e94/files/b764ef86-b1e3-43a9-a7e2-e761a267688b.jpg',
@@ -62,14 +70,6 @@ const Index = () => {
     {
       image: 'https://cdn.poehali.dev/projects/c846c6bc-a002-4737-a261-823e13b16e94/files/f81da3e6-3572-4da5-80b9-140909e7ad37.jpg',
       title: 'Черное золото'
-    },
-    {
-      image: 'https://cdn.poehali.dev/projects/c846c6bc-a002-4737-a261-823e13b16e94/files/9632dbfa-fbf2-44af-8806-6c495f6e0024.jpg',
-      title: 'Мятная свежесть'
-    },
-    {
-      image: 'https://cdn.poehali.dev/projects/c846c6bc-a002-4737-a261-823e13b16e94/files/f9696d0d-0c66-4034-893a-8eecfb909396.jpg',
-      title: 'Персиковый закат'
     }
   ];
 

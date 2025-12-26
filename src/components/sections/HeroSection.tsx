@@ -13,7 +13,7 @@ const HeroSection = ({ onScrollToBooking, onScrollToPortfolio }: HeroSectionProp
         <Badge variant="secondary" className="mb-8 bg-gray-100 text-gray-700 border-0 text-sm">
           💅 Профессиональный маникюр
         </Badge>
-        <h2 className="text-6xl md:text-8xl font-semibold leading-[1.1] mb-6 tracking-tight animate-fade-in">
+        <h2 className="text-6xl md:text-8xl font-medium leading-[1.1] mb-6 tracking-tight animate-fade-in" style={{ fontFamily: "'Playfair Display', serif" }}>
           Ваши ногти —<br />наше искусство
         </h2>
         <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-2xl mx-auto animate-fade-in font-light">

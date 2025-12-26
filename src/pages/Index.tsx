@@ -388,7 +388,7 @@ const Index = () => {
           </div>
           <div className="text-center pt-6 border-t border-border space-y-2">
             <p className="text-muted-foreground text-sm">© 2025 YOLO NAIILS. Все права защищены.</p>
-            <p className="text-muted-foreground text-xs">Сделано с любовью Marcos</p>
+            <p className="text-muted-foreground text-xs">Разработчик Marcos ❤️</p>
           </div>
         </div>
       </footer>

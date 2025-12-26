@@ -56,20 +56,24 @@ const Index = () => {
       title: 'Праздничный градиент'
     },
     {
-      image: 'https://cdn.poehali.dev/projects/c846c6bc-a002-4737-a261-823e13b16e94/files/b764ef86-b1e3-43a9-a7e2-e761a267688b.jpg',
-      title: 'Золотая элегантность'
+      image: 'https://cdn.poehali.dev/files/photo_2025-12-27_00-41-46.jpg',
+      title: 'Розовая нежность'
     },
     {
-      image: 'https://cdn.poehali.dev/projects/c846c6bc-a002-4737-a261-823e13b16e94/files/d2d02f11-2e7f-485c-8b07-aebb732e34f0.jpg',
-      title: 'Бордовый шик'
+      image: 'https://cdn.poehali.dev/files/photo_2025-12-27_00-41-47 (2).jpg',
+      title: 'Рубиновый блеск'
     },
     {
-      image: 'https://cdn.poehali.dev/projects/c846c6bc-a002-4737-a261-823e13b16e94/files/7e94c01c-9528-48b6-94f3-c3434fac84cf.jpg',
-      title: 'Лавандовый сад'
+      image: 'https://cdn.poehali.dev/files/photo_2025-12-27_00-41-47.jpg',
+      title: 'Кофейная глазурь'
     },
     {
-      image: 'https://cdn.poehali.dev/projects/c846c6bc-a002-4737-a261-823e13b16e94/files/f81da3e6-3572-4da5-80b9-140909e7ad37.jpg',
-      title: 'Черное золото'
+      image: 'https://cdn.poehali.dev/files/photo_2025-12-27_00-41-48 (2).jpg',
+      title: 'Серебро и рубин'
+    },
+    {
+      image: 'https://cdn.poehali.dev/files/photo_2025-12-27_00-41-48.jpg',
+      title: 'Мраморная классика'
     }
   ];
 

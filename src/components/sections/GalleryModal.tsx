@@ -15,31 +15,33 @@ interface GalleryModalProps {
 const GalleryModal = ({ open, onOpenChange, portfolio }: GalleryModalProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-5xl max-h-[90vh] p-0 gap-0 bg-white/98 backdrop-blur-3xl border-gray-200 shadow-2xl">
-        <DialogHeader className="px-8 pt-8 pb-4">
+      <DialogContent className="max-w-5xl max-h-[90vh] p-0 gap-0 bg-card backdrop-blur-3xl border-border shadow-2xl overflow-hidden">
+        <DialogHeader className="px-8 pt-8 pb-4 flex-shrink-0">
           <DialogTitle className="text-3xl font-semibold tracking-tight">
             Мои работы
           </DialogTitle>
         </DialogHeader>
 
-        <ScrollArea className="px-8 pb-8">
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-            {portfolio.map((item, idx) => (
-              <div 
-                key={idx}
-                className="group cursor-pointer animate-scale-in"
-                style={{ animationDelay: `${idx * 0.05}s` }}
-              >
-                <div className="aspect-square overflow-hidden rounded-2xl bg-gray-100">
-                  <img 
-                    src={item.image}
-                    alt={item.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
+        <ScrollArea className="h-full max-h-[calc(90vh-120px)]">
+          <div className="px-8 pb-8">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+              {portfolio.map((item, idx) => (
+                <div 
+                  key={idx}
+                  className="group cursor-pointer animate-scale-in"
+                  style={{ animationDelay: `${idx * 0.05}s` }}
+                >
+                  <div className="aspect-square overflow-hidden rounded-2xl bg-muted">
+                    <img 
+                      src={item.image}
+                      alt={item.title}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+                  <p className="mt-3 text-sm font-medium text-muted-foreground text-center">{item.title}</p>
                 </div>
-                <p className="mt-3 text-sm font-medium text-gray-700 text-center">{item.title}</p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </ScrollArea>
       </DialogContent>

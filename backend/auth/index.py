@@ -1,8 +1,8 @@
 import json
-import hashlib
 import secrets
 import os
 import psycopg2
+import bcrypt
 from datetime import datetime, timedelta
 
 def handler(event: dict, context) -> dict:
@@ -67,10 +67,20 @@ def handler(event: dict, context) -> dict:
             else:
                 attempts = 0
             
-            password_hash = hashlib.sha256(password.encode()).hexdigest()
-            correct_hash = hashlib.sha256('yolo2024'.encode()).hexdigest()
+            stored_hash = os.environ.get('ADMIN_PASSWORD_HASH', '').encode()
             
-            if password_hash == correct_hash:
+            if not stored_hash:
+                return {
+                    'statusCode': 500,
+                    'headers': {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    'body': json.dumps({'error': 'Пароль администратора не настроен'}),
+                    'isBase64Encoded': False
+                }
+            
+            if bcrypt.checkpw(password.encode(), stored_hash):
                 token = secrets.token_urlsafe(32)
                 expires_at = datetime.now() + timedelta(days=7)
                 
@@ -81,6 +91,10 @@ def handler(event: dict, context) -> dict:
                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                         expires_at TIMESTAMP NOT NULL
                     )
+                """)
+                
+                cur.execute("""
+                    DELETE FROM admin_sessions WHERE expires_at < CURRENT_TIMESTAMP
                 """)
                 
                 cur.execute("""

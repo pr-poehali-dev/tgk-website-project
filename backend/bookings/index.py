@@ -36,6 +36,18 @@ def handler(event: dict, context) -> dict:
             comment = data.get('comment', '')
             photos_base64 = data.get('photos', [])
             
+            MAX_PHOTOS = 3
+            if len(photos_base64) > MAX_PHOTOS:
+                return {
+                    'statusCode': 400,
+                    'headers': {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    'body': json.dumps({'error': f'Максимум {MAX_PHOTOS} фото'}),
+                    'isBase64Encoded': False
+                }
+            
             source_ip = event.get('requestContext', {}).get('identity', {}).get('sourceIp', 'unknown')
             
             cur.execute("""
@@ -74,6 +86,14 @@ def handler(event: dict, context) -> dict:
             else:
                 count = 0
             
+            VALID_IMAGE_SIGNATURES = {
+                b'\xff\xd8\xff': 'image/jpeg',
+                b'\x89PNG\r\n\x1a\n': 'image/png',
+                b'GIF87a': 'image/gif',
+                b'GIF89a': 'image/gif',
+                b'RIFF': 'image/webp'
+            }
+            
             MAX_PHOTO_SIZE = 5 * 1024 * 1024
             for idx, photo_data in enumerate(photos_base64):
                 if photo_data.startswith('data:image'):
@@ -89,6 +109,23 @@ def handler(event: dict, context) -> dict:
                             'Access-Control-Allow-Origin': '*'
                         },
                         'body': json.dumps({'error': f'Фото {idx + 1} слишком большое (максимум 5MB)'}),
+                        'isBase64Encoded': False
+                    }
+                
+                is_valid_image = False
+                for signature in VALID_IMAGE_SIGNATURES.keys():
+                    if photo_bytes.startswith(signature):
+                        is_valid_image = True
+                        break
+                
+                if not is_valid_image:
+                    return {
+                        'statusCode': 400,
+                        'headers': {
+                            'Content-Type': 'application/json',
+                            'Access-Control-Allow-Origin': '*'
+                        },
+                        'body': json.dumps({'error': f'Файл {idx + 1} не является изображением'}),
                         'isBase64Encoded': False
                     }
             

@@ -46,6 +46,30 @@ const Index = () => {
     {
       image: 'https://cdn.poehali.dev/projects/c846c6bc-a002-4737-a261-823e13b16e94/files/28288c7d-4245-4cda-8882-ef51103d960a.jpg',
       title: 'Французский стиль'
+    },
+    {
+      image: 'https://cdn.poehali.dev/projects/c846c6bc-a002-4737-a261-823e13b16e94/files/b764ef86-b1e3-43a9-a7e2-e761a267688b.jpg',
+      title: 'Золотая элегантность'
+    },
+    {
+      image: 'https://cdn.poehali.dev/projects/c846c6bc-a002-4737-a261-823e13b16e94/files/d2d02f11-2e7f-485c-8b07-aebb732e34f0.jpg',
+      title: 'Бордовый шик'
+    },
+    {
+      image: 'https://cdn.poehali.dev/projects/c846c6bc-a002-4737-a261-823e13b16e94/files/7e94c01c-9528-48b6-94f3-c3434fac84cf.jpg',
+      title: 'Лавандовый сад'
+    },
+    {
+      image: 'https://cdn.poehali.dev/projects/c846c6bc-a002-4737-a261-823e13b16e94/files/f81da3e6-3572-4da5-80b9-140909e7ad37.jpg',
+      title: 'Черное золото'
+    },
+    {
+      image: 'https://cdn.poehali.dev/projects/c846c6bc-a002-4737-a261-823e13b16e94/files/9632dbfa-fbf2-44af-8806-6c495f6e0024.jpg',
+      title: 'Мятная свежесть'
+    },
+    {
+      image: 'https://cdn.poehali.dev/projects/c846c6bc-a002-4737-a261-823e13b16e94/files/f9696d0d-0c66-4034-893a-8eecfb909396.jpg',
+      title: 'Персиковый закат'
     }
   ];
 

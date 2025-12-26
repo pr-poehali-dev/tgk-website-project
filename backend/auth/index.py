@@ -5,6 +5,12 @@ import psycopg2
 import bcrypt
 from datetime import datetime, timedelta
 
+SECURITY_HEADERS = {
+    'X-Frame-Options': 'DENY',
+    'X-Content-Type-Options': 'nosniff',
+    'Content-Security-Policy': "default-src 'none'; script-src 'self'; connect-src 'self'; img-src 'self' https://cdn.poehali.dev; style-src 'self'"
+}
+
 def handler(event: dict, context) -> dict:
     """API для авторизации администратора с хешированием паролей"""
     method = event.get('httpMethod', 'GET')
@@ -17,7 +23,8 @@ def handler(event: dict, context) -> dict:
                 'Access-Control-Allow-Origin': frontend_domain,
                 'Access-Control-Allow-Methods': 'POST, OPTIONS',
                 'Access-Control-Allow-Headers': 'Content-Type',
-                'Access-Control-Allow-Credentials': 'true'
+                'Access-Control-Allow-Credentials': 'true',
+                **SECURITY_HEADERS
             },
             'body': '',
             'isBase64Encoded': False
@@ -58,7 +65,9 @@ def handler(event: dict, context) -> dict:
                         'statusCode': 429,
                         'headers': {
                             'Content-Type': 'application/json',
-                            'Access-Control-Allow-Origin': '*'
+                            'Access-Control-Allow-Origin': frontend_domain,
+                            'Access-Control-Allow-Credentials': 'true',
+                            **SECURITY_HEADERS
                         },
                         'body': json.dumps({'error': 'Слишком много попыток. Попробуйте через час'}),
                         'isBase64Encoded': False
@@ -76,7 +85,9 @@ def handler(event: dict, context) -> dict:
                     'statusCode': 500,
                     'headers': {
                         'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': '*'
+                        'Access-Control-Allow-Origin': frontend_domain,
+                        'Access-Control-Allow-Credentials': 'true',
+                        **SECURITY_HEADERS
                     },
                     'body': json.dumps({'error': 'Пароль администратора не настроен'}),
                     'isBase64Encoded': False
@@ -120,7 +131,8 @@ def handler(event: dict, context) -> dict:
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': frontend_domain,
                         'Access-Control-Allow-Credentials': 'true',
-                        'Set-Cookie': cookie_header
+                        'Set-Cookie': cookie_header,
+                        **SECURITY_HEADERS
                     },
                     'body': json.dumps({
                         'success': True,
@@ -144,7 +156,8 @@ def handler(event: dict, context) -> dict:
                     'headers': {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': frontend_domain,
-                        'Access-Control-Allow-Credentials': 'true'
+                        'Access-Control-Allow-Credentials': 'true',
+                        **SECURITY_HEADERS
                     },
                     'body': json.dumps({
                         'success': False,
@@ -159,7 +172,8 @@ def handler(event: dict, context) -> dict:
                 'headers': {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': frontend_domain,
-                    'Access-Control-Allow-Credentials': 'true'
+                    'Access-Control-Allow-Credentials': 'true',
+                    **SECURITY_HEADERS
                 },
                 'body': json.dumps({'error': str(e)}),
                 'isBase64Encoded': False
@@ -173,7 +187,8 @@ def handler(event: dict, context) -> dict:
         'headers': {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': frontend_domain,
-            'Access-Control-Allow-Credentials': 'true'
+            'Access-Control-Allow-Credentials': 'true',
+            **SECURITY_HEADERS
         },
         'body': json.dumps({'error': 'Method not allowed'}),
         'isBase64Encoded': False

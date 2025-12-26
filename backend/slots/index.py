@@ -4,6 +4,12 @@ import psycopg2
 from datetime import datetime, date
 from utils import verify_admin_token
 
+SECURITY_HEADERS = {
+    'X-Frame-Options': 'DENY',
+    'X-Content-Type-Options': 'nosniff',
+    'Content-Security-Policy': "default-src 'none'; script-src 'self'; connect-src 'self'; img-src 'self' https://cdn.poehali.dev; style-src 'self'"
+}
+
 def handler(event: dict, context) -> dict:
     """API для управления слотами времени записи"""
     frontend_domain = os.environ.get('FRONTEND_DOMAIN', '*')
@@ -16,7 +22,8 @@ def handler(event: dict, context) -> dict:
                 'Access-Control-Allow-Origin': frontend_domain,
                 'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
                 'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Token, Cookie',
-                'Access-Control-Allow-Credentials': 'true'
+                'Access-Control-Allow-Credentials': 'true',
+                **SECURITY_HEADERS
             },
             'body': '',
             'isBase64Encoded': False
@@ -47,7 +54,8 @@ def handler(event: dict, context) -> dict:
                 'headers': {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': frontend_domain,
-                    'Access-Control-Allow-Credentials': 'true'
+                    'Access-Control-Allow-Credentials': 'true',
+                    **SECURITY_HEADERS
                 },
                 'body': json.dumps(result),
                 'isBase64Encoded': False
@@ -67,7 +75,8 @@ def handler(event: dict, context) -> dict:
                     'headers': {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': frontend_domain,
-                        'Access-Control-Allow-Credentials': 'true'
+                        'Access-Control-Allow-Credentials': 'true',
+                        **SECURITY_HEADERS
                     },
                     'body': json.dumps({'error': 'Неавторизован'}),
                     'isBase64Encoded': False
@@ -93,7 +102,8 @@ def handler(event: dict, context) -> dict:
                     'headers': {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': frontend_domain,
-                        'Access-Control-Allow-Credentials': 'true'
+                        'Access-Control-Allow-Credentials': 'true',
+                        **SECURITY_HEADERS
                     },
                     'body': json.dumps({'id': result[0], 'message': 'Слот создан'}),
                     'isBase64Encoded': False
@@ -104,7 +114,8 @@ def handler(event: dict, context) -> dict:
                     'headers': {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': frontend_domain,
-                        'Access-Control-Allow-Credentials': 'true'
+                        'Access-Control-Allow-Credentials': 'true',
+                        **SECURITY_HEADERS
                     },
                     'body': json.dumps({'error': 'Слот уже существует'}),
                     'isBase64Encoded': False
@@ -124,7 +135,8 @@ def handler(event: dict, context) -> dict:
                     'headers': {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': frontend_domain,
-                        'Access-Control-Allow-Credentials': 'true'
+                        'Access-Control-Allow-Credentials': 'true',
+                        **SECURITY_HEADERS
                     },
                     'body': json.dumps({'error': 'Неавторизован'}),
                     'isBase64Encoded': False
@@ -147,7 +159,8 @@ def handler(event: dict, context) -> dict:
                 'headers': {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': frontend_domain,
-                    'Access-Control-Allow-Credentials': 'true'
+                    'Access-Control-Allow-Credentials': 'true',
+                    **SECURITY_HEADERS
                 },
                 'body': json.dumps({'message': 'Слот обновлен'}),
                 'isBase64Encoded': False
@@ -167,7 +180,8 @@ def handler(event: dict, context) -> dict:
                     'headers': {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': frontend_domain,
-                        'Access-Control-Allow-Credentials': 'true'
+                        'Access-Control-Allow-Credentials': 'true',
+                        **SECURITY_HEADERS
                     },
                     'body': json.dumps({'error': 'Неавторизован'}),
                     'isBase64Encoded': False
@@ -188,7 +202,8 @@ def handler(event: dict, context) -> dict:
                 'headers': {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': frontend_domain,
-                    'Access-Control-Allow-Credentials': 'true'
+                    'Access-Control-Allow-Credentials': 'true',
+                    **SECURITY_HEADERS
                 },
                 'body': json.dumps({'message': 'Слот удален'}),
                 'isBase64Encoded': False
@@ -200,7 +215,8 @@ def handler(event: dict, context) -> dict:
             'headers': {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': frontend_domain,
-                'Access-Control-Allow-Credentials': 'true'
+                'Access-Control-Allow-Credentials': 'true',
+                **SECURITY_HEADERS
             },
             'body': json.dumps({'error': str(e)}),
             'isBase64Encoded': False

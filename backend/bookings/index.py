@@ -5,6 +5,13 @@ import base64
 import boto3
 from datetime import datetime
 from utils import verify_admin_token
+from validation import sanitize_text, validate_contact, validate_booking_type, validate_name
+
+SECURITY_HEADERS = {
+    'X-Frame-Options': 'DENY',
+    'X-Content-Type-Options': 'nosniff',
+    'Content-Security-Policy': "default-src 'none'; script-src 'self'; connect-src 'self'; img-src 'self' https://cdn.poehali.dev; style-src 'self'"
+}
 
 def handler(event: dict, context) -> dict:
     """API для создания заявок на запись с загрузкой фото"""
@@ -18,7 +25,8 @@ def handler(event: dict, context) -> dict:
                 'Access-Control-Allow-Origin': frontend_domain,
                 'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
                 'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Token, Cookie',
-                'Access-Control-Allow-Credentials': 'true'
+                'Access-Control-Allow-Credentials': 'true',
+                **SECURITY_HEADERS
             },
             'body': '',
             'isBase64Encoded': False
@@ -29,14 +37,72 @@ def handler(event: dict, context) -> dict:
     
     try:
         if method == 'POST':
-            data = json.loads(event.get('body', '{}'))
+            body = event.get('body', '{}')
+            
+            if len(body) > 50 * 1024 * 1024:
+                return {
+                    'statusCode': 413,
+                    'headers': {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': frontend_domain,
+                        'Access-Control-Allow-Credentials': 'true',
+                        **SECURITY_HEADERS
+                    },
+                    'body': json.dumps({'error': 'Размер данных слишком большой'}),
+                    'isBase64Encoded': False
+                }
+            
+            data = json.loads(body)
             
             slot_id = data.get('slot_id')
-            client_name = data.get('name')
-            client_contact = data.get('contact')
-            booking_type = data.get('type')
+            client_name = data.get('name', '')
+            client_contact = data.get('contact', '')
+            booking_type = data.get('type', '')
             comment = data.get('comment', '')
             photos_base64 = data.get('photos', [])
+            
+            if not validate_name(client_name):
+                return {
+                    'statusCode': 400,
+                    'headers': {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': frontend_domain,
+                        'Access-Control-Allow-Credentials': 'true',
+                        **SECURITY_HEADERS
+                    },
+                    'body': json.dumps({'error': 'Некорректное имя'}),
+                    'isBase64Encoded': False
+                }
+            
+            if not validate_contact(client_contact):
+                return {
+                    'statusCode': 400,
+                    'headers': {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': frontend_domain,
+                        'Access-Control-Allow-Credentials': 'true',
+                        **SECURITY_HEADERS
+                    },
+                    'body': json.dumps({'error': 'Некорректный контакт'}),
+                    'isBase64Encoded': False
+                }
+            
+            if not validate_booking_type(booking_type):
+                return {
+                    'statusCode': 400,
+                    'headers': {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': frontend_domain,
+                        'Access-Control-Allow-Credentials': 'true',
+                        **SECURITY_HEADERS
+                    },
+                    'body': json.dumps({'error': 'Некорректный тип записи'}),
+                    'isBase64Encoded': False
+                }
+            
+            client_name = sanitize_text(client_name, 100)
+            client_contact = sanitize_text(client_contact, 100)
+            comment = sanitize_text(comment, 500)
             
             MAX_PHOTOS = 3
             if len(photos_base64) > MAX_PHOTOS:
@@ -45,7 +111,8 @@ def handler(event: dict, context) -> dict:
                     'headers': {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': frontend_domain,
-                        'Access-Control-Allow-Credentials': 'true'
+                        'Access-Control-Allow-Credentials': 'true',
+                        **SECURITY_HEADERS
                     },
                     'body': json.dumps({'error': f'Максимум {MAX_PHOTOS} фото'}),
                     'isBase64Encoded': False
@@ -79,7 +146,8 @@ def handler(event: dict, context) -> dict:
                         'headers': {
                             'Content-Type': 'application/json',
                             'Access-Control-Allow-Origin': frontend_domain,
-                            'Access-Control-Allow-Credentials': 'true'
+                            'Access-Control-Allow-Credentials': 'true',
+                            **SECURITY_HEADERS
                         },
                         'body': json.dumps({'error': 'Превышен лимит заявок (5 в сутки). Попробуйте завтра'}),
                         'isBase64Encoded': False
@@ -111,7 +179,8 @@ def handler(event: dict, context) -> dict:
                         'headers': {
                             'Content-Type': 'application/json',
                             'Access-Control-Allow-Origin': frontend_domain,
-                            'Access-Control-Allow-Credentials': 'true'
+                            'Access-Control-Allow-Credentials': 'true',
+                            **SECURITY_HEADERS
                         },
                         'body': json.dumps({'error': f'Фото {idx + 1} слишком большое (максимум 5MB)'}),
                         'isBase64Encoded': False
@@ -129,29 +198,39 @@ def handler(event: dict, context) -> dict:
                         'headers': {
                             'Content-Type': 'application/json',
                             'Access-Control-Allow-Origin': frontend_domain,
-                            'Access-Control-Allow-Credentials': 'true'
+                            'Access-Control-Allow-Credentials': 'true',
+                            **SECURITY_HEADERS
                         },
                         'body': json.dumps({'error': f'Файл {idx + 1} не является изображением'}),
                         'isBase64Encoded': False
                     }
             
             cur.execute("""
-                UPDATE time_slots 
-                SET is_available = false 
+                SELECT id FROM time_slots 
                 WHERE id = %s AND is_available = true
+                FOR UPDATE
             """, (slot_id,))
             
-            if cur.rowcount == 0:
+            locked_slot = cur.fetchone()
+            
+            if not locked_slot:
                 return {
                     'statusCode': 409,
                     'headers': {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': frontend_domain,
-                        'Access-Control-Allow-Credentials': 'true'
+                        'Access-Control-Allow-Credentials': 'true',
+                        **SECURITY_HEADERS
                     },
                     'body': json.dumps({'error': 'Слот уже занят'}),
                     'isBase64Encoded': False
                 }
+            
+            cur.execute("""
+                UPDATE time_slots 
+                SET is_available = false 
+                WHERE id = %s
+            """, (slot_id,))
             
             cur.execute("""
                 INSERT INTO bookings 
@@ -206,7 +285,8 @@ def handler(event: dict, context) -> dict:
                 'headers': {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': frontend_domain,
-                    'Access-Control-Allow-Credentials': 'true'
+                    'Access-Control-Allow-Credentials': 'true',
+                    **SECURITY_HEADERS
                 },
                 'body': json.dumps({
                     'booking_id': booking_id,
@@ -230,7 +310,8 @@ def handler(event: dict, context) -> dict:
                     'headers': {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': frontend_domain,
-                        'Access-Control-Allow-Credentials': 'true'
+                        'Access-Control-Allow-Credentials': 'true',
+                        **SECURITY_HEADERS
                     },
                     'body': json.dumps({'error': 'Неавторизован'}),
                     'isBase64Encoded': False
@@ -278,7 +359,8 @@ def handler(event: dict, context) -> dict:
                 'headers': {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': frontend_domain,
-                    'Access-Control-Allow-Credentials': 'true'
+                    'Access-Control-Allow-Credentials': 'true',
+                    **SECURITY_HEADERS
                 },
                 'body': json.dumps(result),
                 'isBase64Encoded': False
@@ -298,7 +380,8 @@ def handler(event: dict, context) -> dict:
                     'headers': {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': frontend_domain,
-                        'Access-Control-Allow-Credentials': 'true'
+                        'Access-Control-Allow-Credentials': 'true',
+                        **SECURITY_HEADERS
                     },
                     'body': json.dumps({'error': 'Неавторизован'}),
                     'isBase64Encoded': False
@@ -313,7 +396,8 @@ def handler(event: dict, context) -> dict:
                     'headers': {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': frontend_domain,
-                        'Access-Control-Allow-Credentials': 'true'
+                        'Access-Control-Allow-Credentials': 'true',
+                        **SECURITY_HEADERS
                     },
                     'body': json.dumps({'error': 'Не указан ID заявки'}),
                     'isBase64Encoded': False
@@ -328,7 +412,8 @@ def handler(event: dict, context) -> dict:
                     'headers': {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': frontend_domain,
-                        'Access-Control-Allow-Credentials': 'true'
+                        'Access-Control-Allow-Credentials': 'true',
+                        **SECURITY_HEADERS
                     },
                     'body': json.dumps({'error': 'Заявка не найдена'}),
                     'isBase64Encoded': False
@@ -347,7 +432,8 @@ def handler(event: dict, context) -> dict:
                 'headers': {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': frontend_domain,
-                    'Access-Control-Allow-Credentials': 'true'
+                    'Access-Control-Allow-Credentials': 'true',
+                    **SECURITY_HEADERS
                 },
                 'body': json.dumps({'message': 'Заявка удалена, слот освобожден'}),
                 'isBase64Encoded': False
@@ -359,7 +445,8 @@ def handler(event: dict, context) -> dict:
                 'headers': {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': frontend_domain,
-                    'Access-Control-Allow-Credentials': 'true'
+                    'Access-Control-Allow-Credentials': 'true',
+                    **SECURITY_HEADERS
                 },
                 'body': json.dumps({'error': 'Method not allowed'}),
                 'isBase64Encoded': False
@@ -373,7 +460,8 @@ def handler(event: dict, context) -> dict:
             'headers': {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': frontend_domain,
-                'Access-Control-Allow-Credentials': 'true'
+                'Access-Control-Allow-Credentials': 'true',
+                **SECURITY_HEADERS
             },
             'body': json.dumps({'error': str(e)}),
             'isBase64Encoded': False

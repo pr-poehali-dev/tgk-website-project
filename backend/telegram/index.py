@@ -3,6 +3,12 @@ import os
 import psycopg2
 import requests
 
+SECURITY_HEADERS = {
+    'X-Frame-Options': 'DENY',
+    'X-Content-Type-Options': 'nosniff',
+    'Content-Security-Policy': "default-src 'none'; script-src 'self'; connect-src 'self'; img-src 'self' https://cdn.poehali.dev; style-src 'self'"
+}
+
 def handler(event: dict, context) -> dict:
     """Отправка заявки мастеру в Telegram"""
     frontend_domain = os.environ.get('FRONTEND_DOMAIN', '*')
@@ -15,7 +21,8 @@ def handler(event: dict, context) -> dict:
                 'Access-Control-Allow-Origin': frontend_domain,
                 'Access-Control-Allow-Methods': 'POST, OPTIONS',
                 'Access-Control-Allow-Headers': 'Content-Type, Cookie',
-                'Access-Control-Allow-Credentials': 'true'
+                'Access-Control-Allow-Credentials': 'true',
+                **SECURITY_HEADERS
             },
             'body': '',
             'isBase64Encoded': False
@@ -27,7 +34,8 @@ def handler(event: dict, context) -> dict:
             'headers': {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': frontend_domain,
-                'Access-Control-Allow-Credentials': 'true'
+                'Access-Control-Allow-Credentials': 'true',
+                **SECURITY_HEADERS
             },
             'body': json.dumps({'error': 'Method not allowed'}),
             'isBase64Encoded': False
@@ -56,7 +64,8 @@ def handler(event: dict, context) -> dict:
                 'headers': {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': frontend_domain,
-                    'Access-Control-Allow-Credentials': 'true'
+                    'Access-Control-Allow-Credentials': 'true',
+                    **SECURITY_HEADERS
                 },
                 'body': json.dumps({'error': 'Заявка не найдена'}),
                 'isBase64Encoded': False
@@ -90,7 +99,8 @@ def handler(event: dict, context) -> dict:
                 'headers': {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': frontend_domain,
-                    'Access-Control-Allow-Credentials': 'true'
+                    'Access-Control-Allow-Credentials': 'true',
+                    **SECURITY_HEADERS
                 },
                 'body': json.dumps({'error': 'Telegram не настроен'}),
                 'isBase64Encoded': False
@@ -109,7 +119,8 @@ def handler(event: dict, context) -> dict:
                 'headers': {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': frontend_domain,
-                    'Access-Control-Allow-Credentials': 'true'
+                    'Access-Control-Allow-Credentials': 'true',
+                    **SECURITY_HEADERS
                 },
                 'body': json.dumps({'error': 'Ошибка отправки в Telegram'}),
                 'isBase64Encoded': False
@@ -149,7 +160,8 @@ def handler(event: dict, context) -> dict:
             'headers': {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': frontend_domain,
-                'Access-Control-Allow-Credentials': 'true'
+                'Access-Control-Allow-Credentials': 'true',
+                **SECURITY_HEADERS
             },
             'body': json.dumps({'message': 'Заявка отправлена мастеру'}),
             'isBase64Encoded': False
@@ -161,7 +173,8 @@ def handler(event: dict, context) -> dict:
             'headers': {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': frontend_domain,
-                'Access-Control-Allow-Credentials': 'true'
+                'Access-Control-Allow-Credentials': 'true',
+                **SECURITY_HEADERS
             },
             'body': json.dumps({'error': str(e)}),
             'isBase64Encoded': False

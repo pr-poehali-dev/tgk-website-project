@@ -25,10 +25,7 @@ const HeroSection = ({ onScrollToBooking, onScrollToPortfolio }: HeroSectionProp
     return () => clearInterval(typingInterval);
   }, []);
 
-  const handleScrollToPortfolio = () => {
-    const element = document.getElementById('portfolio');
-    element?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
+
 
   return (
     <section id="home" className="pt-32 pb-24 px-6">
@@ -56,7 +53,7 @@ const HeroSection = ({ onScrollToBooking, onScrollToPortfolio }: HeroSectionProp
           <Button 
             size="lg" 
             variant="outline" 
-            onClick={handleScrollToPortfolio}
+            onClick={onScrollToPortfolio}
             className="text-base px-8 h-12 rounded-full border-border hover:bg-muted"
           >
             Смотреть работы

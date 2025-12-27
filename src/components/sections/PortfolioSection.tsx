@@ -54,8 +54,8 @@ const PortfolioSection = ({ portfolio }: PortfolioSectionProps) => {
             <Card 
               key={idx} 
               className="overflow-hidden group cursor-pointer bg-card border-border hover:shadow-xl transition-all duration-500 animate-scale-in"
-              style={{ animationDelay: `${idx * 0.1}s` }}
-              onClick={() => setSelectedIndex(idx)}
+              style={{ animationDelay: `${showAll && idx >= 6 ? (idx - 6) * 0.1 : idx * 0.1}s` }}
+              onClick={() => setSelectedIndex(portfolio.findIndex(p => p.image === item.image))}
             >
               <div className="aspect-square overflow-hidden relative">
                 <img 

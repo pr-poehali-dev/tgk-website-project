@@ -72,38 +72,39 @@ const PortfolioSection = ({ portfolio }: PortfolioSectionProps) => {
 
     <DialogPrimitive.Root open={selectedIndex !== null} onOpenChange={() => setSelectedIndex(null)}>
       <DialogPrimitive.Portal>
-        <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
-        <DialogPrimitive.Content className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/90 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
+        <DialogPrimitive.Content className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4">
           <button 
             onClick={() => setSelectedIndex(null)}
-            className="absolute top-4 right-4 z-50 bg-white/10 hover:bg-white/20 rounded-full p-2 transition-colors"
+            className="absolute top-2 right-2 sm:top-4 sm:right-4 z-50 bg-white/10 hover:bg-white/20 rounded-full p-2 transition-colors"
           >
-            <Icon name="X" className="text-white" size={24} />
+            <Icon name="X" className="text-white" size={20} />
           </button>
 
           {selectedIndex !== null && selectedIndex > 0 && (
             <button 
               onClick={handlePrev}
-              className="absolute left-4 z-50 bg-white/10 hover:bg-white/20 rounded-full p-3 transition-colors"
+              className="absolute left-2 sm:left-4 z-50 bg-white/10 hover:bg-white/20 rounded-full p-2 sm:p-3 transition-colors"
             >
-              <Icon name="ChevronLeft" className="text-white" size={32} />
+              <Icon name="ChevronLeft" className="text-white" size={24} />
             </button>
           )}
 
           {selectedIndex !== null && selectedIndex < portfolio.length - 1 && (
             <button 
               onClick={handleNext}
-              className="absolute right-4 z-50 bg-white/10 hover:bg-white/20 rounded-full p-3 transition-colors"
+              className="absolute right-2 sm:right-4 z-50 bg-white/10 hover:bg-white/20 rounded-full p-2 sm:p-3 transition-colors"
             >
-              <Icon name="ChevronRight" className="text-white" size={32} />
+              <Icon name="ChevronRight" className="text-white" size={24} />
             </button>
           )}
 
           {selectedIndex !== null && (
             <img 
+              key={selectedIndex}
               src={portfolio[selectedIndex].image} 
               alt="Полный размер"
-              className="max-w-full max-h-full object-contain"
+              className="max-w-full max-h-full object-contain animate-in fade-in zoom-in-95 duration-300"
             />
           )}
         </DialogPrimitive.Content>

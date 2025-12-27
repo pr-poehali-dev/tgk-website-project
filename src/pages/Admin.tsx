@@ -49,7 +49,6 @@ const Admin = () => {
       const response = await fetch('https://functions.poehali.dev/a6d698fe-c92a-4d08-b994-4fc13e0a8679', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
         body: JSON.stringify({ password })
       });
 

@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { useState, useEffect } from 'react';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
 import Icon from '@/components/ui/icon';
 
 interface PortfolioItem {
@@ -70,9 +70,10 @@ const PortfolioSection = ({ portfolio }: PortfolioSectionProps) => {
       </div>
     </section>
 
-    <Dialog open={selectedIndex !== null} onOpenChange={() => setSelectedIndex(null)}>
-      <DialogContent className="max-w-4xl w-[90vw] h-[80vh] p-4 bg-black/95 border-none overflow-hidden">
-        <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
+    <DialogPrimitive.Root open={selectedIndex !== null} onOpenChange={() => setSelectedIndex(null)}>
+      <DialogPrimitive.Portal>
+        <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
+        <DialogPrimitive.Content className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <button 
             onClick={() => setSelectedIndex(null)}
             className="absolute top-4 right-4 z-50 bg-white/10 hover:bg-white/20 rounded-full p-2 transition-colors"
@@ -102,12 +103,12 @@ const PortfolioSection = ({ portfolio }: PortfolioSectionProps) => {
             <img 
               src={portfolio[selectedIndex].image} 
               alt="Полный размер"
-              className="max-w-[85%] max-h-[85%] object-contain"
+              className="max-w-full max-h-full object-contain"
             />
           )}
-        </div>
-      </DialogContent>
-    </Dialog>
+        </DialogPrimitive.Content>
+      </DialogPrimitive.Portal>
+    </DialogPrimitive.Root>
     </>
   );
 };

@@ -71,8 +71,8 @@ const PortfolioSection = ({ portfolio }: PortfolioSectionProps) => {
     </section>
 
     <Dialog open={selectedIndex !== null} onOpenChange={() => setSelectedIndex(null)}>
-      <DialogContent className="max-w-4xl w-[90vw] h-[80vh] p-0 bg-black/95 border-none">
-        <div className="relative w-full h-full flex items-center justify-center">
+      <DialogContent className="max-w-4xl w-[90vw] h-[80vh] p-4 bg-black/95 border-none overflow-hidden">
+        <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
           <button 
             onClick={() => setSelectedIndex(null)}
             className="absolute top-4 right-4 z-50 bg-white/10 hover:bg-white/20 rounded-full p-2 transition-colors"
@@ -102,7 +102,7 @@ const PortfolioSection = ({ portfolio }: PortfolioSectionProps) => {
             <img 
               src={portfolio[selectedIndex].image} 
               alt="Полный размер"
-              className="max-w-[calc(100%-8rem)] max-h-[calc(100%-4rem)] object-contain"
+              className="max-w-[85%] max-h-[85%] object-contain"
             />
           )}
         </div>

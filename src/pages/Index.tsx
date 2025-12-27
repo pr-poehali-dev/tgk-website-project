@@ -120,36 +120,59 @@ const Index = () => {
     element?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files) return;
-
-    const readers: Promise<string>[] = [];
-    
-    for (let i = 0; i < Math.min(files.length, 5); i++) {
-      readers.push(
-        new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onload = (event) => resolve(event.target?.result as string);
-          reader.readAsDataURL(files[i]);
-        })
-      );
-    }
-
-    Promise.all(readers).then((results) => {
-      setSelectedImages(results);
+  const compressImage = (file: File): Promise<string> => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          
+          const maxSize = 1200;
+          if (width > height && width > maxSize) {
+            height = (height * maxSize) / width;
+            width = maxSize;
+          } else if (height > maxSize) {
+            width = (width * maxSize) / height;
+            height = maxSize;
+          }
+          
+          canvas.width = width;
+          canvas.height = height;
+          
+          const ctx = canvas.getContext('2d')!;
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          resolve(canvas.toDataURL('image/jpeg', 0.7));
+        };
+        img.src = e.target?.result as string;
+      };
+      reader.readAsDataURL(file);
     });
   };
 
-  const handleReceiptUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    const compressed: Promise<string>[] = [];
+    
+    for (let i = 0; i < Math.min(files.length, 5); i++) {
+      compressed.push(compressImage(files[i]));
+    }
+
+    const results = await Promise.all(compressed);
+    setSelectedImages(results);
+  };
+
+  const handleReceiptUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      setReceiptImage(event.target?.result as string);
-    };
-    reader.readAsDataURL(file);
+    const compressed = await compressImage(file);
+    setReceiptImage(compressed);
   };
 
   const handleSubmitBooking = async () => {

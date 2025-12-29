@@ -11,17 +11,15 @@ SECURITY_HEADERS = {
 
 def handler(event: dict, context) -> dict:
     """API для управления слотами времени записи"""
-    frontend_domain = os.environ.get('FRONTEND_DOMAIN', '*')
     method = event.get('httpMethod', 'GET')
     
     if method == 'OPTIONS':
         return {
             'statusCode': 200,
             'headers': {
-                'Access-Control-Allow-Origin': frontend_domain,
+                'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-                'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Token, Cookie',
-                'Access-Control-Allow-Credentials': 'true',
+                'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Token',
                 **SECURITY_HEADERS
             },
             'body': '',
@@ -52,8 +50,7 @@ def handler(event: dict, context) -> dict:
                 'statusCode': 200,
                 'headers': {
                     'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': frontend_domain,
-                    'Access-Control-Allow-Credentials': 'true',
+                    'Access-Control-Allow-Origin': '*',
                     **SECURITY_HEADERS
                 },
                 'body': json.dumps(result),
@@ -77,8 +74,7 @@ def handler(event: dict, context) -> dict:
                     'statusCode': 401,
                     'headers': {
                         'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': frontend_domain,
-                        'Access-Control-Allow-Credentials': 'true',
+                        'Access-Control-Allow-Origin': '*',
                         **SECURITY_HEADERS
                     },
                     'body': json.dumps({'error': 'Неавторизован'}),
@@ -104,8 +100,7 @@ def handler(event: dict, context) -> dict:
                     'statusCode': 201,
                     'headers': {
                         'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': frontend_domain,
-                        'Access-Control-Allow-Credentials': 'true',
+                        'Access-Control-Allow-Origin': '*',
                         **SECURITY_HEADERS
                     },
                     'body': json.dumps({'id': result[0], 'message': 'Слот создан'}),
@@ -116,8 +111,7 @@ def handler(event: dict, context) -> dict:
                     'statusCode': 409,
                     'headers': {
                         'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': frontend_domain,
-                        'Access-Control-Allow-Credentials': 'true',
+                        'Access-Control-Allow-Origin': '*',
                         **SECURITY_HEADERS
                     },
                     'body': json.dumps({'error': 'Слот уже существует'}),
@@ -141,8 +135,7 @@ def handler(event: dict, context) -> dict:
                     'statusCode': 401,
                     'headers': {
                         'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': frontend_domain,
-                        'Access-Control-Allow-Credentials': 'true',
+                        'Access-Control-Allow-Origin': '*',
                         **SECURITY_HEADERS
                     },
                     'body': json.dumps({'error': 'Неавторизован'}),
@@ -190,8 +183,7 @@ def handler(event: dict, context) -> dict:
                     'statusCode': 401,
                     'headers': {
                         'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': frontend_domain,
-                        'Access-Control-Allow-Credentials': 'true',
+                        'Access-Control-Allow-Origin': '*',
                         **SECURITY_HEADERS
                     },
                     'body': json.dumps({'error': 'Неавторизован'}),

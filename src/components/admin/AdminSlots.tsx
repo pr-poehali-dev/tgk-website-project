@@ -73,7 +73,6 @@ const AdminSlots = () => {
           'Content-Type': 'application/json',
           'X-Admin-Token': token || ''
         },
-        credentials: 'include',
         body: JSON.stringify({
           date: dateStr,
           time: newSlotTime
@@ -118,7 +117,6 @@ const AdminSlots = () => {
           'Content-Type': 'application/json',
           'X-Admin-Token': token || ''
         },
-        credentials: 'include',
         body: JSON.stringify({ slot_id: slotId })
       });
 
@@ -192,7 +190,6 @@ const AdminSlots = () => {
           'Content-Type': 'application/json',
           'X-Admin-Token': token || ''
         },
-        credentials: 'include',
         body: JSON.stringify({
           date: dateStr,
           time: time

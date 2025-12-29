@@ -242,12 +242,13 @@
 }
 
 .logo-text {
-  background: linear-gradient(135deg, #f8b4d0 0%, #e993b8 50%, #f8b4d0 100%);
+  background: linear-gradient(135deg, #e91e63 0%, #f06292 50%, #ec407a 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  text-shadow: 0 2px 8px rgba(248, 180, 208, 0.3);
-  filter: drop-shadow(0 2px 4px rgba(233, 147, 184, 0.2));
+  filter: drop-shadow(0 3px 6px rgba(233, 30, 99, 0.4))
+    drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+  font-weight: 800;
 }
 
 .logo-letter {

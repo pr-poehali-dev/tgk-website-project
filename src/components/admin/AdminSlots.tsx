@@ -362,10 +362,14 @@ const AdminSlots = () => {
             <div className="mt-8 pt-6 border-t border-border">
               <h3 className="text-sm font-medium mb-4">Все слоты</h3>
               <div className="space-y-4">
-                {Object.entries(groupedSlots).map(([date, dateSlots]) => (
+                {Object.entries(groupedSlots).map(([date, dateSlots]) => {
+                  // Парсим дату как локальную, чтобы избежать сдвига timezone
+                  const [year, month, day] = date.split('-').map(Number);
+                  const localDate = new Date(year, month - 1, day);
+                  return (
                   <div key={date} className="bg-muted rounded-xl p-4">
                     <h4 className="font-medium mb-2 text-sm">
-                      {new Date(date).toLocaleDateString('ru-RU', {
+                      {localDate.toLocaleDateString('ru-RU', {
                         day: 'numeric',
                         month: 'long',
                         weekday: 'short'
@@ -386,7 +390,8 @@ const AdminSlots = () => {
                       ))}
                     </div>
                   </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}

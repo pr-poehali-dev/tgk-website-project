@@ -67,12 +67,16 @@ const CalendarModal = ({ open, onOpenChange, groupedSlots, onBookNow }: Calendar
   const timeSlotsForSelectedDate = selectedDateStr ? groupedSlots[selectedDateStr] || [] : [];
 
   const getMonthDay = (dateStr: string) => {
-    const date = new Date(dateStr);
+    // Парсим дату как локальную, а не UTC
+    const [year, month, day] = dateStr.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
     return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
   };
 
   const getDayName = (dateStr: string) => {
-    const date = new Date(dateStr);
+    // Парсим дату как локальную, а не UTC
+    const [year, month, day] = dateStr.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
     return date.toLocaleDateString('ru-RU', { weekday: 'long' });
   };
 

@@ -149,10 +149,14 @@ const AdminBookings = () => {
                     <div className="flex items-center gap-3">
                       <div className="text-right">
                         <p className="font-medium">
-                          {new Date(booking.date).toLocaleDateString('ru-RU', {
-                            day: 'numeric',
-                            month: 'short'
-                          })}
+                          {(() => {
+                            const [year, month, day] = booking.date.split('-').map(Number);
+                            const localDate = new Date(year, month - 1, day);
+                            return localDate.toLocaleDateString('ru-RU', {
+                              day: 'numeric',
+                              month: 'short'
+                            });
+                          })()}
                         </p>
                         <p className="text-sm text-muted-foreground">{booking.time.slice(0, 5)}</p>
                       </div>
@@ -206,11 +210,15 @@ const AdminBookings = () => {
                   <div>
                     <p className="text-sm text-muted-foreground">Дата записи</p>
                     <p className="font-medium">
-                      {new Date(selectedBooking.date).toLocaleDateString('ru-RU', {
-                        day: 'numeric',
-                        month: 'long',
-                        year: 'numeric'
-                      })}
+                      {(() => {
+                        const [year, month, day] = selectedBooking.date.split('-').map(Number);
+                        const localDate = new Date(year, month - 1, day);
+                        return localDate.toLocaleDateString('ru-RU', {
+                          day: 'numeric',
+                          month: 'long',
+                          year: 'numeric'
+                        });
+                      })()}
                     </p>
                   </div>
                   <div>

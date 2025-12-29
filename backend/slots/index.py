@@ -158,8 +158,7 @@ def handler(event: dict, context) -> dict:
                 'statusCode': 200,
                 'headers': {
                     'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': frontend_domain,
-                    'Access-Control-Allow-Credentials': 'true',
+                    'Access-Control-Allow-Origin': '*',
                     **SECURITY_HEADERS
                 },
                 'body': json.dumps({'message': 'Слот обновлен'}),
@@ -204,8 +203,7 @@ def handler(event: dict, context) -> dict:
                 'statusCode': 200,
                 'headers': {
                     'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': frontend_domain,
-                    'Access-Control-Allow-Credentials': 'true',
+                    'Access-Control-Allow-Origin': '*',
                     **SECURITY_HEADERS
                 },
                 'body': json.dumps({'message': 'Слот удален'}),

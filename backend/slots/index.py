@@ -217,8 +217,7 @@ def handler(event: dict, context) -> dict:
             'statusCode': 500,
             'headers': {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': frontend_domain,
-                'Access-Control-Allow-Credentials': 'true',
+                'Access-Control-Allow-Origin': '*',
                 **SECURITY_HEADERS
             },
             'body': json.dumps({'error': str(e)}),

@@ -1,0 +1,15 @@
+{
+  "tests": [
+    {
+      "name": "Run cleanup",
+      "method": "POST",
+      "path": "/",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "message": "string",
+        "deleted": "number"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

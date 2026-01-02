@@ -158,14 +158,14 @@ const BookingModal = ({
                                 Доступное время
                               </p>
                             </div>
-                            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+                            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2 sm:gap-3">
                               {timeSlotsForSelectedDate.map((slot) => (
                                 <Button
                                   key={slot.id}
                                   variant={selectedSlot?.id === slot.id ? 'default' : 'outline'}
                                   disabled={!slot.available}
                                   onClick={() => onSelectSlot(slot)}
-                                  className={`h-12 text-base font-medium transition-all duration-200 ${
+                                  className={`h-11 sm:h-12 text-sm sm:text-base font-medium transition-all duration-200 active:scale-95 ${
                                     selectedSlot?.id === slot.id 
                                       ? 'bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground shadow-lg scale-105' 
                                       : 'hover:bg-muted/80 hover:border-primary/30 hover:scale-105'

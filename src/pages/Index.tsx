@@ -342,15 +342,15 @@ const Index = () => {
                 onClick={() => setGalleryModalOpen(true)}
                 variant="ghost"
                 size="sm"
-                className="text-foreground/70 hover:bg-muted rounded-full px-2 md:px-4"
+                className="text-foreground/70 hover:bg-muted rounded-full px-3 md:px-4 h-9 md:h-10"
               >
-                <Icon name="Image" size={18} className="md:mr-2" />
+                <Icon name="Image" size={20} className="md:mr-2" />
                 <span className="hidden md:inline">Работы</span>
               </Button>
               <Button 
                 onClick={() => setBookingModalOpen(true)}
                 size="sm"
-                className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-3 md:px-6 text-sm"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-4 md:px-6 text-sm h-9 md:h-10 font-medium"
               >
                 Записаться
               </Button>
@@ -390,17 +390,17 @@ const Index = () => {
         isCompressing={isCompressing}
       />
 
-      <footer className="py-12 px-6 bg-muted border-t border-border">
+      <footer className="py-8 sm:py-10 md:py-12 px-4 sm:px-6 bg-muted border-t border-border">
         <div className="container mx-auto max-w-6xl">
-          <div className="grid md:grid-cols-2 gap-8 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-6 sm:mb-8">
             <div>
-              <h3 className="text-lg font-medium mb-4">Адрес студии</h3>
-              <p className="text-muted-foreground mb-2">г. Томск, ул. Алтайская 10</p>
+              <h3 className="text-base sm:text-lg font-medium mb-3 sm:mb-4">Адрес студии</h3>
+              <p className="text-muted-foreground mb-2 text-sm sm:text-base">г. Томск, ул. Алтайская 10</p>
               <a 
                 href="https://2gis.ru/tomsk/geo/422848120236160?m=84.97393%2C56.480667%2F14.76" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-primary hover:underline text-sm"
+                className="text-primary hover:underline text-xs sm:text-sm"
               >
                 Открыть в 2ГИС
               </a>
@@ -409,7 +409,7 @@ const Index = () => {
               href="https://2gis.ru/tomsk/geo/422848120236160?m=84.97393%2C56.480667%2F14.76" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="rounded-xl overflow-hidden border border-border h-[200px] block hover:opacity-90 transition-opacity"
+              className="rounded-xl overflow-hidden border border-border h-[160px] sm:h-[180px] md:h-[200px] block hover:opacity-90 transition-opacity"
             >
               <img 
                 src="https://cdn.poehali.dev/files/photo_2025-12-27_02-34-26.jpg" 
@@ -418,9 +418,9 @@ const Index = () => {
               />
             </a>
           </div>
-          <div className="text-center pt-6 border-t border-border space-y-2">
-            <p className="text-muted-foreground text-sm">© 2025 YOLO NAIILS. Все права защищены.</p>
-            <p className="text-muted-foreground text-xs">Разработчик Marcos ❤️</p>
+          <div className="text-center pt-4 sm:pt-6 border-t border-border space-y-1 sm:space-y-2">
+            <p className="text-muted-foreground text-xs sm:text-sm">© 2025 YOLO NAIILS. Все права защищены.</p>
+            <p className="text-muted-foreground text-[10px] sm:text-xs">Разработчик Marcos ❤️</p>
           </div>
         </div>
       </footer>

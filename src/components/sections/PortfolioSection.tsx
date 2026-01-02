@@ -44,12 +44,12 @@ const PortfolioSection = ({ portfolio }: PortfolioSectionProps) => {
 
   return (
     <>
-    <section id="portfolio" className="py-24 px-6 scroll-mt-20">
+    <section id="portfolio" className="py-12 sm:py-16 md:py-24 px-4 sm:px-6 scroll-mt-20">
       <div className="container mx-auto max-w-6xl">
-        <h2 className="text-5xl md:text-6xl font-semibold text-center mb-16 tracking-tight">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold text-center mb-8 sm:mb-12 md:mb-16 tracking-tight">
           Мои работы
         </h2>
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
           {displayedPortfolio.map((item, idx) => (
             <Card 
               key={idx} 

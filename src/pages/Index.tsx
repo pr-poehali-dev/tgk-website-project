@@ -106,7 +106,8 @@ const Index = () => {
     try {
       const response = await fetch('https://functions.poehali.dev/9689b825-c9ac-49db-b85b-f1310460470d');
       const data = await response.json();
-      setSlots(data);
+      const availableSlots = data.filter((slot: TimeSlot) => slot.available);
+      setSlots(availableSlots);
     } catch (error) {
       toast({
         title: 'Ошибка',

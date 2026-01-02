@@ -81,6 +81,23 @@ const BookingModal = ({
     return '';
   };
 
+  const tileContent = ({ date }: { date: Date }) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const dateStr = `${year}-${month}-${day}`;
+    const slots = groupedSlots[dateStr];
+    
+    if (slots && slots.length > 0) {
+      return (
+        <div className="absolute bottom-1 left-1/2 -translate-x-1/2 text-[10px] sm:text-xs font-semibold px-1.5 py-0.5 rounded-full bg-primary/20 text-primary border border-primary/30">
+          {slots.length}
+        </div>
+      );
+    }
+    return null;
+  };
+
   const handleDateChange = (value: Date | null) => {
     setSelectedDate(value);
   };
@@ -126,6 +143,7 @@ const BookingModal = ({
                           value={selectedDate}
                           tileDisabled={tileDisabled}
                           tileClassName={tileClassName}
+                          tileContent={tileContent}
                           locale="ru-RU"
                           minDate={new Date()}
                         />

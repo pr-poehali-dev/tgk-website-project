@@ -207,6 +207,13 @@
   font-weight: 600;
 }
 
+.calendar-wrapper .react-calendar__tile--active .bg-primary\/20 {
+  background: rgba(255, 255, 255, 0.95) !important;
+  color: hsl(var(--primary)) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  font-weight: 700;
+}
+
 .calendar-wrapper .react-calendar__tile.available-date {
   background: hsl(var(--muted));
   font-weight: 600;

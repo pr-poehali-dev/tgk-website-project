@@ -95,11 +95,14 @@ const BookingModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[95vh] sm:max-h-[90vh] p-0 gap-0 bg-card backdrop-blur-3xl border-border shadow-2xl overflow-hidden">
-        <DialogHeader className="px-4 sm:px-6 md:px-8 pt-4 sm:pt-6 md:pt-8 pb-3 md:pb-4 flex-shrink-0">
-          <DialogTitle className="text-xl sm:text-2xl md:text-3xl font-semibold tracking-tight">
-            {!showPayment ? 'Запись на маникюр' : 'Подтверждение оплаты'}
+      <DialogContent className="max-w-4xl max-h-[95vh] sm:max-h-[90vh] p-0 gap-0 bg-gradient-to-br from-card via-card to-card/95 backdrop-blur-3xl border-border/50 shadow-2xl overflow-hidden">
+        <DialogHeader className="px-4 sm:px-6 md:px-8 pt-6 sm:pt-8 md:pt-10 pb-4 md:pb-6 flex-shrink-0 border-b border-border/50">
+          <DialogTitle className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+            {!showPayment ? '✨ Запись на маникюр' : '💳 Подтверждение оплаты'}
           </DialogTitle>
+          {!showPayment && (
+            <p className="text-sm text-muted-foreground mt-2">Выберите удобное время и заполните форму</p>
+          )}
         </DialogHeader>
 
         <ScrollArea className="h-full max-h-[calc(95vh-100px)] sm:max-h-[calc(90vh-120px)]">
@@ -107,10 +110,13 @@ const BookingModal = ({
             {!showPayment ? (
               <div className="space-y-8">
                 <div>
-                  <h3 className="text-lg font-medium mb-4">Выберите дату и время</h3>
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="h-10 w-1 bg-gradient-to-b from-primary to-primary/40 rounded-full"></div>
+                    <h3 className="text-xl font-semibold">Выберите дату и время</h3>
+                  </div>
                   {Object.keys(groupedSlots).length === 0 ? (
-                    <div className="p-6 text-center bg-muted rounded-2xl">
-                      <p className="text-muted-foreground">Свободных окошек пока нет</p>
+                    <div className="p-8 text-center bg-gradient-to-br from-muted/50 to-muted rounded-3xl border border-border/30">
+                      <p className="text-lg text-muted-foreground">✨ Свободных окошек пока нет</p>
                     </div>
                   ) : (
                     <div className="space-y-4">
@@ -125,20 +131,27 @@ const BookingModal = ({
                         />
                       </div>
 
-                      <div>
+                      <div className="mt-6">
                         {selectedDate && timeSlotsForSelectedDate.length > 0 ? (
-                          <div className="space-y-3">
-                            <p className="text-sm font-medium text-muted-foreground">
-                              Доступное время
-                            </p>
-                            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
+                          <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
+                            <div className="flex items-center gap-2">
+                              <span className="text-2xl">🕐</span>
+                              <p className="text-base font-medium">
+                                Доступное время
+                              </p>
+                            </div>
+                            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
                               {timeSlotsForSelectedDate.map((slot) => (
                                 <Button
                                   key={slot.id}
                                   variant={selectedSlot?.id === slot.id ? 'default' : 'outline'}
                                   disabled={!slot.available}
                                   onClick={() => onSelectSlot(slot)}
-                                  className={`h-10 text-sm ${selectedSlot?.id === slot.id ? 'bg-primary hover:bg-primary/90 text-primary-foreground' : 'hover:bg-muted'}`}
+                                  className={`h-12 text-base font-medium transition-all duration-200 ${
+                                    selectedSlot?.id === slot.id 
+                                      ? 'bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground shadow-lg scale-105' 
+                                      : 'hover:bg-muted/80 hover:border-primary/30 hover:scale-105'
+                                  }`}
                                 >
                                   {slot.time.slice(0, 5)}
                                 </Button>
@@ -146,12 +159,14 @@ const BookingModal = ({
                             </div>
                           </div>
                         ) : selectedDate ? (
-                          <div className="flex items-center justify-center py-8 text-center text-sm text-muted-foreground px-4">
-                            Нет доступных окошек на эту дату
+                          <div className="flex flex-col items-center justify-center py-12 text-center px-4 bg-muted/30 rounded-2xl">
+                            <span className="text-4xl mb-3">📅</span>
+                            <p className="text-base text-muted-foreground">Нет доступных окошек на эту дату</p>
                           </div>
                         ) : (
-                          <div className="flex items-center justify-center py-8 text-center text-sm text-muted-foreground px-4">
-                            Выберите дату в календаре
+                          <div className="flex flex-col items-center justify-center py-12 text-center px-4 bg-gradient-to-br from-muted/30 to-muted/10 rounded-2xl border-2 border-dashed border-border/50">
+                            <span className="text-4xl mb-3">👆</span>
+                            <p className="text-base text-muted-foreground">Выберите дату в календаре</p>
                           </div>
                         )}
                       </div>
@@ -160,72 +175,85 @@ const BookingModal = ({
                 </div>
 
                 {selectedSlot && (
-                  <div className="space-y-6 pt-6 border-t border-border">
+                  <div className="space-y-6 pt-8 mt-8 border-t-2 border-gradient-to-r from-transparent via-border to-transparent animate-in fade-in slide-in-from-bottom-4 duration-500">
                     <div>
-                      <Label htmlFor="name" className="text-base">Ваше имя</Label>
+                      <Label htmlFor="name" className="text-base font-medium flex items-center gap-2">
+                        <span>👤</span> Ваше имя
+                      </Label>
                       <Input
                         id="name"
                         value={formData.name}
                         onChange={(e) => onFormChange({ ...formData, name: e.target.value })}
                         placeholder="Анна"
-                        className="mt-2 h-12 bg-background border-border"
+                        className="mt-3 h-14 text-base bg-background/50 border-border focus:border-primary/50 focus:ring-2 focus:ring-primary/20 rounded-xl transition-all"
                       />
                     </div>
 
                     <div>
-                      <Label htmlFor="contact" className="text-base">Telegram</Label>
+                      <Label htmlFor="contact" className="text-base font-medium flex items-center gap-2">
+                        <span>✈️</span> Telegram
+                      </Label>
                       <Input
                         id="contact"
                         value={formData.contact}
                         onChange={(e) => onFormChange({ ...formData, contact: e.target.value })}
                         placeholder="@username"
-                        className="mt-2 h-12 bg-background border-border"
+                        className="mt-3 h-14 text-base bg-background/50 border-border focus:border-primary/50 focus:ring-2 focus:ring-primary/20 rounded-xl transition-all"
                       />
                     </div>
 
                     <div>
-                      <Label className="text-base">Что планируете?</Label>
-                      <RadioGroup value={formData.type} onValueChange={(value) => onFormChange({ ...formData, type: value })} className="mt-3 space-y-2">
-                        <div className="flex items-center space-x-3 p-4 rounded-xl bg-muted hover:bg-muted/80 transition-colors cursor-pointer">
-                          <RadioGroupItem value="know_what_i_want" id="know" />
-                          <Label htmlFor="know" className="cursor-pointer font-normal">Знаю, что хочу</Label>
+                      <Label className="text-base font-medium flex items-center gap-2">
+                        <span>💅</span> Что планируете?
+                      </Label>
+                      <RadioGroup value={formData.type} onValueChange={(value) => onFormChange({ ...formData, type: value })} className="mt-3 space-y-3">
+                        <div className="flex items-center space-x-4 p-5 rounded-2xl bg-gradient-to-r from-muted/50 to-muted/30 hover:from-muted/70 hover:to-muted/50 border border-border/30 hover:border-primary/30 transition-all cursor-pointer group">
+                          <RadioGroupItem value="know_what_i_want" id="know" className="group-hover:border-primary/50" />
+                          <Label htmlFor="know" className="cursor-pointer font-normal text-base">Знаю, что хочу</Label>
                         </div>
-                        <div className="flex items-center space-x-3 p-4 rounded-xl bg-muted hover:bg-muted/80 transition-colors cursor-pointer">
-                          <RadioGroupItem value="not_sure" id="not_sure" />
-                          <Label htmlFor="not_sure" className="cursor-pointer font-normal">Пока не определилась</Label>
+                        <div className="flex items-center space-x-4 p-5 rounded-2xl bg-gradient-to-r from-muted/50 to-muted/30 hover:from-muted/70 hover:to-muted/50 border border-border/30 hover:border-primary/30 transition-all cursor-pointer group">
+                          <RadioGroupItem value="not_sure" id="not_sure" className="group-hover:border-primary/50" />
+                          <Label htmlFor="not_sure" className="cursor-pointer font-normal text-base">Пока не определилась</Label>
                         </div>
-                        <div className="flex items-center space-x-3 p-4 rounded-xl bg-muted hover:bg-muted/80 transition-colors cursor-pointer">
-                          <RadioGroupItem value="no_design" id="no_design" />
-                          <Label htmlFor="no_design" className="cursor-pointer font-normal">Без дизайна</Label>
+                        <div className="flex items-center space-x-4 p-5 rounded-2xl bg-gradient-to-r from-muted/50 to-muted/30 hover:from-muted/70 hover:to-muted/50 border border-border/30 hover:border-primary/30 transition-all cursor-pointer group">
+                          <RadioGroupItem value="no_design" id="no_design" className="group-hover:border-primary/50" />
+                          <Label htmlFor="no_design" className="cursor-pointer font-normal text-base">Без дизайна</Label>
                         </div>
                       </RadioGroup>
                     </div>
 
                     <div>
-                      <Label htmlFor="comment" className="text-base">Комментарий (по желанию)</Label>
+                      <Label htmlFor="comment" className="text-base font-medium flex items-center gap-2">
+                        <span>💬</span> Комментарий <span className="text-sm text-muted-foreground font-normal">(по желанию)</span>
+                      </Label>
                       <Textarea
                         id="comment"
                         value={formData.comment}
                         onChange={(e) => onFormChange({ ...formData, comment: e.target.value })}
-                        placeholder="Опишите желаемый дизайн"
-                        className="mt-2 min-h-24 bg-background border-border"
+                        placeholder="Опишите желаемый дизайн или пожелания..."
+                        className="mt-3 min-h-28 text-base bg-background/50 border-border focus:border-primary/50 focus:ring-2 focus:ring-primary/20 rounded-xl transition-all"
                       />
                     </div>
 
                     <div>
-                      <Label htmlFor="photos" className="text-base">Фото-референсы (до 5 шт.)</Label>
+                      <Label htmlFor="photos" className="text-base font-medium flex items-center gap-2">
+                        <span>📷</span> Фото-референсы <span className="text-sm text-muted-foreground font-normal">(до 5 шт.)</span>
+                      </Label>
                       <Input
                         id="photos"
                         type="file"
                         accept="image/*"
                         multiple
                         onChange={onImageUpload}
-                        className="mt-2 h-12 bg-background border-border"
+                        className="mt-3 h-14 bg-background/50 border-border hover:border-primary/30 rounded-xl transition-all cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-primary/10 file:text-primary file:font-medium hover:file:bg-primary/20"
                       />
                       {selectedImages.length > 0 && (
                         <div className="mt-4 flex gap-3 flex-wrap">
                           {selectedImages.map((img, idx) => (
-                            <img key={idx} src={img} alt={`Preview ${idx}`} className="w-20 h-20 object-cover rounded-lg" />
+                            <div key={idx} className="relative group">
+                              <img src={img} alt={`Preview ${idx}`} className="w-24 h-24 object-cover rounded-2xl border-2 border-border/50 group-hover:border-primary/50 transition-all shadow-lg" />
+                              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 rounded-2xl transition-all"></div>
+                            </div>
                           ))}
                         </div>
                       )}
@@ -234,48 +262,72 @@ const BookingModal = ({
                     <Button 
                       onClick={onSubmitBooking} 
                       disabled={isCompressing}
-                      className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground text-base"
+                      className="w-full h-16 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] rounded-2xl"
                     >
-                      {isCompressing ? 'Обработка фото...' : 'Продолжить к оплате'}
+                      {isCompressing ? (
+                        <span className="flex items-center gap-2">⏳ Обработка фото...</span>
+                      ) : (
+                        <span className="flex items-center gap-2">💳 Продолжить к оплате</span>
+                      )}
                     </Button>
                   </div>
                 )}
               </div>
             ) : (
-              <div className="space-y-6">
-                <div className="text-center py-6">
-                  <p className="text-4xl font-semibold mb-2">300 ₽</p>
-                  <p className="text-muted-foreground">Предоплата для подтверждения</p>
+              <div className="space-y-8">
+                <div className="text-center py-8 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent rounded-3xl border border-primary/20">
+                  <div className="text-6xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent mb-3">
+                    300 ₽
+                  </div>
+                  <p className="text-base text-muted-foreground">Предоплата для подтверждения записи</p>
                 </div>
 
-                <div className="bg-muted p-6 rounded-2xl space-y-2">
-                  <p className="font-medium mb-3">Реквизиты для перевода</p>
-                  <p className="text-sm">Ozon Банк: <span className="font-mono">2204 3204 3449 4284</span></p>
-                  <p className="text-xs text-muted-foreground mt-3">Получатель: Арина Ш.</p>
+                <div className="bg-gradient-to-br from-muted/80 to-muted/40 p-8 rounded-3xl border border-border/50 space-y-4 shadow-lg">
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="text-2xl">🏦</span>
+                    <p className="text-lg font-semibold">Реквизиты для перевода</p>
+                  </div>
+                  <div className="bg-background/50 p-5 rounded-2xl">
+                    <p className="text-sm text-muted-foreground mb-2">Ozon Банк</p>
+                    <p className="text-xl font-mono font-bold tracking-wider">2204 3204 3449 4284</p>
+                  </div>
+                  <p className="text-sm text-muted-foreground pt-2 flex items-center gap-2">
+                    <span>👤</span> Получатель: Арина Ш.
+                  </p>
                 </div>
 
                 <div>
-                  <Label htmlFor="receipt" className="text-base">Загрузите чек об оплате</Label>
+                  <Label htmlFor="receipt" className="text-base font-medium flex items-center gap-2 mb-3">
+                    <span>🧾</span> Загрузите чек об оплате
+                  </Label>
                   <Input
                     id="receipt"
                     type="file"
                     accept="image/*"
                     onChange={onReceiptUpload}
-                    className="mt-2 h-12 bg-background border-border"
+                    className="h-14 bg-background/50 border-border hover:border-primary/30 rounded-xl transition-all cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-primary/10 file:text-primary file:font-medium hover:file:bg-primary/20"
                   />
                   {receiptImage && (
-                    <div className="mt-4">
-                      <img src={receiptImage} alt="Receipt" className="w-32 h-32 object-cover rounded-lg" />
+                    <div className="mt-6 flex justify-center">
+                      <div className="relative group">
+                        <img src={receiptImage} alt="Receipt" className="w-40 h-40 object-cover rounded-3xl border-2 border-primary/30 shadow-2xl" />
+                        <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 rounded-3xl transition-all"></div>
+                        <div className="absolute -top-2 -right-2 bg-green-500 text-white p-2 rounded-full shadow-lg">✓</div>
+                      </div>
                     </div>
                   )}
                 </div>
 
                 <Button 
                   onClick={onSubmitPayment} 
-                  className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground text-base"
+                  className="w-full h-16 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={!receiptImage || isCompressing}
                 >
-                  {isCompressing ? 'Обработка чека...' : 'Записаться'}
+                  {isCompressing ? (
+                    <span className="flex items-center gap-2">⏳ Обработка чека...</span>
+                  ) : (
+                    <span className="flex items-center gap-2">✨ Записаться</span>
+                  )}
                 </Button>
               </div>
             )}
